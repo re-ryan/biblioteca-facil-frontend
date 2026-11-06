@@ -20,7 +20,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { Link as RouterLink } from 'react-router-dom'
 
 const initialCredentials = {
   login: '',
@@ -70,12 +69,13 @@ export const LoginPage = () => {
                   Acesse o Biblioteca Fácil
                 </Typography>
                 <Typography sx={{ color: 'rgba(255, 255, 255, 0.76)', fontSize: '1.05rem' }}>
-                  A entrada identifica bibliotecários e administradores antes do acesso às
-                  funções de manutenção do catálogo.
+                  A entrada identifica leitores e administradores e direciona cada perfil para
+                  os recursos disponíveis.
                 </Typography>
               </Box>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.64)' }}>
-                Quer apenas procurar um livro? O catálogo permanece disponível sem login.
+                Leitores acessam o catálogo e suas reservas. Administradores gerenciam os dados
+                de sua biblioteca.
               </Typography>
             </Stack>
           </Box>
@@ -170,10 +170,6 @@ export const LoginPage = () => {
 
                   <Button type="submit" variant="contained" size="large">
                     Entrar
-                  </Button>
-
-                  <Button component={RouterLink} to="/catalogo" color="inherit">
-                    Continuar sem login
                   </Button>
                 </Stack>
               </Box>

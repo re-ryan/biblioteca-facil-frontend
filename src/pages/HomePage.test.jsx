@@ -21,11 +21,9 @@ describe('HomePage', () => {
     ).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /^leitor$/i })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /^administrador$/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /acessar catálogo/i })).toHaveAttribute(
-      'href',
-      '/catalogo',
-    )
-    expect(screen.getByRole('link', { name: /acessar administração/i })).toHaveAttribute(
+    expect(screen.queryByRole('link', { name: /acessar catálogo/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /conhecer área administrativa/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /entrar na plataforma/i })).toHaveAttribute(
       'href',
       '/login',
     )

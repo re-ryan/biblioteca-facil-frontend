@@ -21,6 +21,7 @@ describe('LoginPage', () => {
     await user.type(screen.getByLabelText(/^senha/i), 'senha-de-teste')
     await user.click(screen.getByRole('button', { name: /^entrar$/i }))
 
+    expect(screen.queryByRole('link', { name: /continuar sem login/i })).not.toBeInTheDocument()
     expect(screen.getByRole('alert')).toHaveTextContent(/autenticação será conectada ao backend/i)
   })
 })

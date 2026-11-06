@@ -8,7 +8,6 @@ import {
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
   Chip,
   Container,
@@ -26,8 +25,6 @@ const modules = [
     description:
       'Encontra livros nas bibliotecas cadastradas, consulta os detalhes do acervo e solicita reservas.',
     features: ['Pesquisar livros', 'Consultar disponibilidade', 'Solicitar reservas'],
-    action: 'Acessar catálogo',
-    path: '/catalogo',
   },
   {
     icon: <AdminPanelSettingsRoundedIcon fontSize="large" />,
@@ -36,8 +33,6 @@ const modules = [
     description:
       'Gerencia as informações da sua biblioteca, mantém o acervo atualizado e acompanha as solicitações dos leitores.',
     features: ['Gerenciar a biblioteca', 'Cadastrar e atualizar o acervo', 'Acompanhar solicitações'],
-    action: 'Conhecer área administrativa',
-    path: '/admin',
   },
 ]
 
@@ -145,10 +140,10 @@ export const HomePage = () => (
       </Stack>
 
       <Grid container spacing={3}>
-        {modules.map(({ icon, audience, title, description, features, action, path }) => (
+        {modules.map(({ icon, audience, title, description, features }) => (
           <Grid key={title} size={{ xs: 12, md: 6 }}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <CardContent sx={{ p: { xs: 3.5, sm: 4 }, flexGrow: 1 }}>
+            <Card sx={{ height: '100%' }}>
+              <CardContent sx={{ p: { xs: 3.5, sm: 4 } }}>
                 <Stack spacing={2.5}>
                   <Box
                     sx={{
@@ -182,66 +177,10 @@ export const HomePage = () => (
                   </Stack>
                 </Stack>
               </CardContent>
-              <CardActions sx={{ px: { xs: 3.5, sm: 4 }, pb: 4 }}>
-                <Button
-                  component={RouterLink}
-                  to={path}
-                  endIcon={<ArrowForwardRoundedIcon />}
-                >
-                  {action}
-                </Button>
-              </CardActions>
             </Card>
           </Grid>
         ))}
       </Grid>
     </Container>
-
-    <Box sx={{ bgcolor: 'primary.light' }}>
-      <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
-        <Grid container spacing={4} sx={{ alignItems: 'center' }}>
-          <Grid size={{ xs: 12, md: 7 }}>
-            <Stack spacing={1.25}>
-              <Typography component="h2" variant="h3">
-                Como você quer começar?
-              </Typography>
-              <Typography color="text.secondary" sx={{ maxWidth: 720 }}>
-                Leitores podem consultar o catálogo livremente. Administradores entram na
-                plataforma para gerenciar sua biblioteca.
-              </Typography>
-            </Stack>
-          </Grid>
-          <Grid size={{ xs: 12, md: 5 }}>
-            <Stack
-              direction={{ xs: 'column', sm: 'row' }}
-              spacing={2}
-              sx={{
-                alignItems: { xs: 'stretch', sm: 'center' },
-                justifyContent: { md: 'flex-end' },
-              }}
-            >
-              <Button
-                component={RouterLink}
-                to="/catalogo"
-                variant="outlined"
-                size="large"
-                startIcon={<SearchRoundedIcon />}
-              >
-                Explorar catálogo
-              </Button>
-              <Button
-                component={RouterLink}
-                to="/login"
-                variant="contained"
-                size="large"
-                startIcon={<LoginRoundedIcon />}
-              >
-                Acessar administração
-              </Button>
-            </Stack>
-          </Grid>
-        </Grid>
-      </Container>
-    </Box>
   </>
 )
