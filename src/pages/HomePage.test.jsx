@@ -16,12 +16,16 @@ describe('HomePage', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: /o livro que você procura pode estar mais perto do que imagina/i,
+        name: /um só lugar para descobrir livros e organizar acervos/i,
       }),
     ).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /explorar catálogo/i })).toHaveAttribute(
       'href',
       '/catalogo',
+    )
+    expect(screen.getByRole('link', { name: /ir para o login/i })).toHaveAttribute(
+      'href',
+      '/login',
     )
   })
 })

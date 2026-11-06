@@ -1,35 +1,44 @@
+import AdminPanelSettingsRoundedIcon from '@mui/icons-material/AdminPanelSettingsRounded'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import AutoStoriesRoundedIcon from '@mui/icons-material/AutoStoriesRounded'
-import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded'
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
+import LoginRoundedIcon from '@mui/icons-material/LoginRounded'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import {
   Box,
   Button,
   Card,
+  CardActions,
   CardContent,
   Chip,
   Container,
+  Divider,
   Grid,
   Stack,
   Typography,
 } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
 
-const benefits = [
+const modules = [
   {
     icon: <SearchRoundedIcon fontSize="large" />,
-    title: 'Uma busca, várias bibliotecas',
-    description: 'Consulte o catálogo das instituições parceiras em um só lugar.',
+    audience: 'Para leitores',
+    title: 'Catálogo',
+    description:
+      'Uma consulta simples para encontrar os livros cadastrados e conhecer seus dados bibliográficos.',
+    features: ['Busca por título', 'Consulta dos detalhes', 'Acesso público e direto'],
+    action: 'Explorar catálogo',
+    path: '/catalogo',
   },
   {
-    icon: <LocationOnRoundedIcon fontSize="large" />,
-    title: 'Encontre onde está',
-    description: 'Descubra a biblioteca que possui o livro que você procura.',
-  },
-  {
-    icon: <AutoStoriesRoundedIcon fontSize="large" />,
-    title: 'Mais livros em circulação',
-    description: 'Aproxime leitores dos acervos disponíveis na cidade.',
+    icon: <AdminPanelSettingsRoundedIcon fontSize="large" />,
+    audience: 'Para bibliotecas',
+    title: 'Administração',
+    description:
+      'O espaço de trabalho para manter as informações que formam o catálogo da plataforma.',
+    features: ['Cadastro de livros', 'Edição dos registros', 'Organização do catálogo'],
+    action: 'Conhecer administração',
+    path: '/admin',
   },
 ]
 
@@ -40,32 +49,33 @@ export const HomePage = () => (
         overflow: 'hidden',
         position: 'relative',
         background:
-          'radial-gradient(circle at 85% 15%, rgba(213, 139, 43, 0.24), transparent 28%), linear-gradient(135deg, #e8f3ee 0%, #f6f4ee 55%, #f9e4c5 140%)',
+          'radial-gradient(circle at 86% 18%, rgba(213, 139, 43, 0.22), transparent 28%), linear-gradient(135deg, #e8f3ee 0%, #f6f4ee 56%, #f9e4c5 145%)',
       }}
     >
-      <Container maxWidth="lg" sx={{ py: { xs: 8, md: 13 } }}>
-        <Grid container spacing={6} sx={{ alignItems: 'center' }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 7, md: 11 } }}>
+        <Grid container spacing={{ xs: 6, md: 8 }} sx={{ alignItems: 'center' }}>
           <Grid size={{ xs: 12, md: 7 }}>
             <Stack spacing={3} sx={{ alignItems: 'flex-start' }}>
               <Chip
-                label="Descubra. Encontre. Leia."
+                label="Biblioteca Fácil"
                 color="secondary"
                 variant="outlined"
-                sx={{ width: 'fit-content' }}
+                sx={{ width: 'fit-content', fontWeight: 700 }}
               />
               <Typography
                 component="h1"
                 variant="h1"
-                sx={{ fontSize: { xs: '3rem', sm: '4rem', md: '5rem' } }}
+                sx={{ fontSize: { xs: '3rem', sm: '4rem', md: '4.75rem' } }}
               >
-                O livro que você procura pode estar mais perto do que imagina.
+                Um só lugar para descobrir livros e organizar acervos.
               </Typography>
               <Typography
                 variant="h6"
                 color="text.secondary"
                 sx={{ maxWidth: 680, fontWeight: 400 }}
               >
-                Pesquise em um catálogo unificado e encontre livros nas bibliotecas parceiras da sua região.
+                A plataforma aproxima leitores e bibliotecas por meio de dois módulos: uma
+                consulta pública ao catálogo e uma área dedicada à administração dos dados.
               </Typography>
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
@@ -73,92 +83,178 @@ export const HomePage = () => (
                 sx={{ width: { xs: '100%', sm: 'auto' } }}
               >
                 <Button
-                  component={RouterLink}
-                  to="/catalogo"
+                  component="a"
+                  href="#modulos"
                   variant="contained"
                   size="large"
                   endIcon={<ArrowForwardRoundedIcon />}
                 >
-                  Explorar catálogo
+                  Conhecer os módulos
                 </Button>
-                <Button component={RouterLink} to="/admin" variant="outlined" size="large">
-                  Acessar administração
+                <Button
+                  component={RouterLink}
+                  to="/login"
+                  variant="outlined"
+                  size="large"
+                  startIcon={<LoginRoundedIcon />}
+                >
+                  Entrar na plataforma
                 </Button>
               </Stack>
             </Stack>
           </Grid>
 
           <Grid size={{ xs: 12, md: 5 }}>
-            <Box
+            <Card
               sx={{
-                minHeight: 360,
-                display: 'grid',
-                placeItems: 'center',
-                position: 'relative',
+                color: 'primary.contrastText',
+                bgcolor: 'primary.dark',
+                border: 'none',
+                borderRadius: 4,
+                boxShadow: '0 28px 80px rgba(14, 70, 61, 0.28)',
               }}
             >
-              <Box
-                sx={{
-                  width: { xs: 250, sm: 320 },
-                  height: { xs: 250, sm: 320 },
-                  borderRadius: '50%',
-                  bgcolor: 'primary.main',
-                  boxShadow: '0 28px 80px rgba(14, 70, 61, 0.28)',
-                  display: 'grid',
-                  placeItems: 'center',
-                  color: 'primary.contrastText',
-                }}
-              >
-                <AutoStoriesRoundedIcon sx={{ fontSize: { xs: 120, sm: 160 } }} />
-              </Box>
-              <Chip
-                label="Catálogo unificado"
-                sx={{
-                  position: 'absolute',
-                  bottom: { xs: 20, sm: 10 },
-                  right: { xs: 5, sm: 0 },
-                  bgcolor: 'background.paper',
-                  fontWeight: 700,
-                  boxShadow: 3,
-                }}
-              />
-            </Box>
+              <CardContent sx={{ p: { xs: 3.5, sm: 4.5 } }}>
+                <Stack spacing={3}>
+                  <Box>
+                    <AutoStoriesRoundedIcon sx={{ fontSize: 58, color: 'secondary.light', mb: 2 }} />
+                    <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
+                      Uma plataforma, dois caminhos
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255, 255, 255, 0.72)' }}>
+                      Cada perfil encontra rapidamente a área adequada para sua necessidade.
+                    </Typography>
+                  </Box>
+
+                  <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.16)' }} />
+
+                  <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+                    <SearchRoundedIcon sx={{ color: 'secondary.light' }} />
+                    <Box>
+                      <Typography sx={{ fontWeight: 700 }}>Consultar livros</Typography>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        Acesso livre pelo módulo Catálogo
+                      </Typography>
+                    </Box>
+                  </Stack>
+
+                  <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+                    <AdminPanelSettingsRoundedIcon sx={{ color: 'secondary.light' }} />
+                    <Box>
+                      <Typography sx={{ fontWeight: 700 }}>Gerenciar informações</Typography>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        Acesso identificado pela Administração
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </Stack>
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
       </Container>
     </Box>
 
-    <Container maxWidth="lg" sx={{ py: { xs: 7, md: 10 } }}>
-      <Stack spacing={1} sx={{ mb: 5, maxWidth: 620 }}>
+    <Container id="modulos" maxWidth="lg" sx={{ py: { xs: 7, md: 10 }, scrollMarginTop: 88 }}>
+      <Stack spacing={1} sx={{ mb: 5, maxWidth: 720 }}>
+        <Typography color="secondary.dark" sx={{ fontWeight: 800, letterSpacing: '0.04em' }}>
+          MÓDULOS DA PLATAFORMA
+        </Typography>
         <Typography
           component="h2"
           variant="h2"
-          sx={{ fontSize: { xs: '2.3rem', md: '3rem' } }}
+          sx={{ fontSize: { xs: '2.35rem', md: '3rem' } }}
         >
-          Conhecimento ao alcance de todos
+          Escolha por onde começar
         </Typography>
         <Typography color="text.secondary" sx={{ fontSize: '1.05rem' }}>
-          Uma experiência simples para quem procura e uma gestão direta para quem cuida do acervo.
+          O Biblioteca Fácil separa a consulta pública das tarefas de manutenção para deixar
+          cada jornada mais clara.
         </Typography>
       </Stack>
 
       <Grid container spacing={3}>
-        {benefits.map(({ icon, title, description }) => (
-          <Grid key={title} size={{ xs: 12, md: 4 }}>
-            <Card sx={{ height: '100%' }}>
-              <CardContent sx={{ p: 3.5 }}>
-                <Box sx={{ color: 'primary.main', mb: 2 }}>
-                  {icon}
-                </Box>
-                <Typography component="h3" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
-                  {title}
-                </Typography>
-                <Typography color="text.secondary">{description}</Typography>
+        {modules.map(({ icon, audience, title, description, features, action, path }) => (
+          <Grid key={title} size={{ xs: 12, md: 6 }}>
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <CardContent sx={{ p: { xs: 3.5, sm: 4 }, flexGrow: 1 }}>
+                <Stack spacing={2.5}>
+                  <Box
+                    sx={{
+                      width: 58,
+                      height: 58,
+                      display: 'grid',
+                      placeItems: 'center',
+                      borderRadius: 3,
+                      color: 'primary.main',
+                      bgcolor: 'primary.light',
+                    }}
+                  >
+                    {icon}
+                  </Box>
+                  <Box>
+                    <Typography color="secondary.dark" variant="overline" sx={{ fontWeight: 800 }}>
+                      {audience}
+                    </Typography>
+                    <Typography component="h3" variant="h4">
+                      {title}
+                    </Typography>
+                  </Box>
+                  <Typography color="text.secondary">{description}</Typography>
+                  <Stack spacing={1.25}>
+                    {features.map((feature) => (
+                      <Stack key={feature} direction="row" spacing={1.25} sx={{ alignItems: 'center' }}>
+                        <CheckCircleRoundedIcon color="primary" fontSize="small" />
+                        <Typography variant="body2">{feature}</Typography>
+                      </Stack>
+                    ))}
+                  </Stack>
+                </Stack>
               </CardContent>
+              <CardActions sx={{ px: { xs: 3.5, sm: 4 }, pb: 4 }}>
+                <Button
+                  component={RouterLink}
+                  to={path}
+                  endIcon={<ArrowForwardRoundedIcon />}
+                >
+                  {action}
+                </Button>
+              </CardActions>
             </Card>
           </Grid>
         ))}
       </Grid>
     </Container>
+
+    <Box sx={{ bgcolor: 'primary.light' }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
+        <Grid container spacing={4} sx={{ alignItems: 'center' }}>
+          <Grid size={{ xs: 12, md: 8 }}>
+            <Stack spacing={1.25}>
+              <Typography component="h2" variant="h3">
+                Já faz parte de uma biblioteca parceira?
+              </Typography>
+              <Typography color="text.secondary" sx={{ maxWidth: 720 }}>
+                A página de acesso identifica quem utiliza as funções administrativas e prepara
+                o caminho para as futuras rotas protegidas da aplicação.
+              </Typography>
+            </Stack>
+          </Grid>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <Stack sx={{ alignItems: { xs: 'flex-start', md: 'flex-end' } }}>
+              <Button
+                component={RouterLink}
+                to="/login"
+                variant="contained"
+                size="large"
+                startIcon={<LoginRoundedIcon />}
+              >
+                Ir para o login
+              </Button>
+            </Stack>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
   </>
 )

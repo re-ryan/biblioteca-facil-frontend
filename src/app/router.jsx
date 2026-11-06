@@ -13,6 +13,9 @@ const pages = {
   admin: lazy(() =>
     import('../pages/AdminPage').then(({ AdminPage: page }) => ({ default: page })),
   ),
+  login: lazy(() =>
+    import('../pages/LoginPage').then(({ LoginPage: page }) => ({ default: page })),
+  ),
   notFound: lazy(() =>
     import('../pages/NotFoundPage').then(({ NotFoundPage: page }) => ({ default: page })),
   ),
@@ -47,6 +50,10 @@ export const router = createBrowserRouter(
         {
           path: 'admin',
           element: withLoading(createElement(pages.admin)),
+        },
+        {
+          path: 'login',
+          element: withLoading(createElement(pages.login)),
         },
         {
           path: '*',

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import LoginRoundedIcon from '@mui/icons-material/LoginRounded'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded'
 import {
@@ -6,6 +7,7 @@ import {
   Box,
   Button,
   Container,
+  Divider,
   Drawer,
   IconButton,
   List,
@@ -109,6 +111,17 @@ export const AppLayout = () => {
               ))}
             </Stack>
 
+            <Button
+              component={RouterLink}
+              to="/login"
+              color="primary"
+              variant={isCurrentPath('/login') ? 'contained' : 'outlined'}
+              startIcon={<LoginRoundedIcon />}
+              sx={{ display: { xs: 'none', md: 'inline-flex' }, ml: 1.5 }}
+            >
+              Entrar
+            </Button>
+
             <IconButton
               aria-label="Abrir menu de navegação"
               color="primary"
@@ -138,6 +151,18 @@ export const AppLayout = () => {
                 <ListItemText primary={label} />
               </ListItemButton>
             ))}
+          </List>
+          <Divider />
+          <List>
+            <ListItemButton
+              component={RouterLink}
+              to="/login"
+              selected={isCurrentPath('/login')}
+              onClick={() => setMenuOpen(false)}
+            >
+              <LoginRoundedIcon color="primary" sx={{ mr: 2 }} />
+              <ListItemText primary="Entrar" />
+            </ListItemButton>
           </List>
         </Box>
       </Drawer>
