@@ -30,27 +30,32 @@ const withLoading = (page) => (
   </Suspense>
 )
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <AppLayout />,
+      children: [
+        {
+          index: true,
+          element: withLoading(createElement(pages.home)),
+        },
+        {
+          path: 'catalogo',
+          element: withLoading(createElement(pages.catalog)),
+        },
+        {
+          path: 'admin',
+          element: withLoading(createElement(pages.admin)),
+        },
+        {
+          path: '*',
+          element: withLoading(createElement(pages.notFound)),
+        },
+      ],
+    },
+  ],
   {
-    path: '/',
-    element: <AppLayout />,
-    children: [
-      {
-        index: true,
-        element: withLoading(createElement(pages.home)),
-      },
-      {
-        path: 'catalogo',
-        element: withLoading(createElement(pages.catalog)),
-      },
-      {
-        path: 'admin',
-        element: withLoading(createElement(pages.admin)),
-      },
-      {
-        path: '*',
-        element: withLoading(createElement(pages.notFound)),
-      },
-    ],
+    basename: import.meta.env.BASE_URL,
   },
-])
+)
