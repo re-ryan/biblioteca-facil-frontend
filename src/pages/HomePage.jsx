@@ -22,22 +22,22 @@ import { Link as RouterLink } from 'react-router-dom'
 const modules = [
   {
     icon: <SearchRoundedIcon fontSize="large" />,
-    audience: 'Para leitores',
-    title: 'Catálogo',
+    audience: 'Módulo Catálogo',
+    title: 'Leitor',
     description:
-      'Uma consulta simples para encontrar os livros cadastrados e conhecer seus dados bibliográficos.',
-    features: ['Busca por título', 'Consulta dos detalhes', 'Acesso público e direto'],
-    action: 'Explorar catálogo',
+      'Encontra livros nas bibliotecas cadastradas, consulta os detalhes do acervo e solicita reservas.',
+    features: ['Pesquisar livros', 'Consultar disponibilidade', 'Solicitar reservas'],
+    action: 'Acessar catálogo',
     path: '/catalogo',
   },
   {
     icon: <AdminPanelSettingsRoundedIcon fontSize="large" />,
-    audience: 'Para bibliotecas',
-    title: 'Administração',
+    audience: 'Módulo Administração',
+    title: 'Administrador',
     description:
-      'O espaço de trabalho para manter as informações que formam o catálogo da plataforma.',
-    features: ['Cadastro de livros', 'Edição dos registros', 'Organização do catálogo'],
-    action: 'Conhecer administração',
+      'Gerencia as informações da sua biblioteca, mantém o acervo atualizado e acompanha as solicitações dos leitores.',
+    features: ['Gerenciar a biblioteca', 'Cadastrar e atualizar o acervo', 'Acompanhar solicitações'],
+    action: 'Conhecer área administrativa',
     path: '/admin',
   },
 ]
@@ -67,15 +67,16 @@ export const HomePage = () => (
                 variant="h1"
                 sx={{ fontSize: { xs: '3rem', sm: '4rem', md: '4.75rem' } }}
               >
-                Um só lugar para descobrir livros e organizar acervos.
+                O livro que você procura pode estar mais perto do que imagina.
               </Typography>
               <Typography
                 variant="h6"
                 color="text.secondary"
                 sx={{ maxWidth: 680, fontWeight: 400 }}
               >
-                A plataforma aproxima leitores e bibliotecas por meio de dois módulos: uma
-                consulta pública ao catálogo e uma área dedicada à administração dos dados.
+                O Biblioteca Fácil conecta leitores e bibliotecas: quem procura um livro
+                consulta o catálogo e solicita reservas, enquanto cada administrador mantém
+                sua biblioteca organizada.
               </Typography>
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
@@ -89,7 +90,7 @@ export const HomePage = () => (
                   size="large"
                   endIcon={<ArrowForwardRoundedIcon />}
                 >
-                  Conhecer os módulos
+                  Entender como funciona
                 </Button>
                 <Button
                   component={RouterLink}
@@ -119,10 +120,10 @@ export const HomePage = () => (
                   <Box>
                     <AutoStoriesRoundedIcon sx={{ fontSize: 58, color: 'secondary.light', mb: 2 }} />
                     <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
-                      Uma plataforma, dois caminhos
+                      Uma experiência para cada usuário
                     </Typography>
                     <Typography sx={{ color: 'rgba(255, 255, 255, 0.72)' }}>
-                      Cada perfil encontra rapidamente a área adequada para sua necessidade.
+                      Leitores encontram livros. Administradores cuidam de suas bibliotecas.
                     </Typography>
                   </Box>
 
@@ -131,9 +132,9 @@ export const HomePage = () => (
                   <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
                     <SearchRoundedIcon sx={{ color: 'secondary.light' }} />
                     <Box>
-                      <Typography sx={{ fontWeight: 700 }}>Consultar livros</Typography>
+                      <Typography sx={{ fontWeight: 700 }}>Leitor</Typography>
                       <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                        Acesso livre pelo módulo Catálogo
+                        Consulta o catálogo e solicita reservas
                       </Typography>
                     </Box>
                   </Stack>
@@ -141,9 +142,9 @@ export const HomePage = () => (
                   <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
                     <AdminPanelSettingsRoundedIcon sx={{ color: 'secondary.light' }} />
                     <Box>
-                      <Typography sx={{ fontWeight: 700 }}>Gerenciar informações</Typography>
+                      <Typography sx={{ fontWeight: 700 }}>Administrador</Typography>
                       <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                        Acesso identificado pela Administração
+                        Gerencia sua biblioteca e o acervo
                       </Typography>
                     </Box>
                   </Stack>
@@ -158,18 +159,18 @@ export const HomePage = () => (
     <Container id="modulos" maxWidth="lg" sx={{ py: { xs: 7, md: 10 }, scrollMarginTop: 88 }}>
       <Stack spacing={1} sx={{ mb: 5, maxWidth: 720 }}>
         <Typography color="secondary.dark" sx={{ fontWeight: 800, letterSpacing: '0.04em' }}>
-          MÓDULOS DA PLATAFORMA
+          PERFIS DE USO
         </Typography>
         <Typography
           component="h2"
           variant="h2"
           sx={{ fontSize: { xs: '2.35rem', md: '3rem' } }}
         >
-          Escolha por onde começar
+          Como cada usuário utiliza o site
         </Typography>
         <Typography color="text.secondary" sx={{ fontSize: '1.05rem' }}>
-          O Biblioteca Fácil separa a consulta pública das tarefas de manutenção para deixar
-          cada jornada mais clara.
+          Cada perfil acessa as ferramentas necessárias para consultar ou administrar uma
+          biblioteca, sem misturar responsabilidades.
         </Typography>
       </Stack>
 
