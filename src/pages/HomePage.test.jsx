@@ -25,7 +25,7 @@ describe('HomePage', () => {
       'href',
       '/catalogo',
     )
-    expect(screen.getByRole('link', { name: /ir para o login/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /acessar administração/i })).toHaveAttribute(
       'href',
       '/login',
     )

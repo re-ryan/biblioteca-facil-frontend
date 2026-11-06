@@ -12,7 +12,6 @@ import {
   CardContent,
   Chip,
   Container,
-  Divider,
   Grid,
   Stack,
   Typography,
@@ -106,51 +105,29 @@ export const HomePage = () => (
           </Grid>
 
           <Grid size={{ xs: 12, md: 5 }}>
-            <Card
+            <Box
               sx={{
-                color: 'primary.contrastText',
-                bgcolor: 'primary.dark',
-                border: 'none',
-                borderRadius: 4,
-                boxShadow: '0 28px 80px rgba(14, 70, 61, 0.28)',
+                minHeight: { xs: 280, sm: 340 },
+                display: 'grid',
+                placeItems: 'center',
+                position: 'relative',
               }}
             >
-              <CardContent sx={{ p: { xs: 3.5, sm: 4.5 } }}>
-                <Stack spacing={3}>
-                  <Box>
-                    <AutoStoriesRoundedIcon sx={{ fontSize: 58, color: 'secondary.light', mb: 2 }} />
-                    <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
-                      Uma experiência para cada usuário
-                    </Typography>
-                    <Typography sx={{ color: 'rgba(255, 255, 255, 0.72)' }}>
-                      Leitores encontram livros. Administradores cuidam de suas bibliotecas.
-                    </Typography>
-                  </Box>
-
-                  <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.16)' }} />
-
-                  <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
-                    <SearchRoundedIcon sx={{ color: 'secondary.light' }} />
-                    <Box>
-                      <Typography sx={{ fontWeight: 700 }}>Leitor</Typography>
-                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                        Consulta o catálogo e solicita reservas
-                      </Typography>
-                    </Box>
-                  </Stack>
-
-                  <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
-                    <AdminPanelSettingsRoundedIcon sx={{ color: 'secondary.light' }} />
-                    <Box>
-                      <Typography sx={{ fontWeight: 700 }}>Administrador</Typography>
-                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                        Gerencia sua biblioteca e o acervo
-                      </Typography>
-                    </Box>
-                  </Stack>
-                </Stack>
-              </CardContent>
-            </Card>
+              <Box
+                sx={{
+                  width: { xs: 250, sm: 320 },
+                  height: { xs: 250, sm: 320 },
+                  display: 'grid',
+                  placeItems: 'center',
+                  borderRadius: '50%',
+                  color: 'primary.contrastText',
+                  bgcolor: 'primary.dark',
+                  boxShadow: '0 28px 80px rgba(14, 70, 61, 0.28)',
+                }}
+              >
+                <AutoStoriesRoundedIcon sx={{ fontSize: { xs: 118, sm: 150 } }} />
+              </Box>
+            </Box>
           </Grid>
         </Grid>
       </Container>
@@ -160,13 +137,6 @@ export const HomePage = () => (
       <Stack spacing={1} sx={{ mb: 5, maxWidth: 720 }}>
         <Typography color="secondary.dark" sx={{ fontWeight: 800, letterSpacing: '0.04em' }}>
           PERFIS DE USO
-        </Typography>
-        <Typography
-          component="h2"
-          variant="h2"
-          sx={{ fontSize: { xs: '2.35rem', md: '3rem' } }}
-        >
-          Como cada usuário utiliza o site
         </Typography>
         <Typography color="text.secondary" sx={{ fontSize: '1.05rem' }}>
           Cada perfil acessa as ferramentas necessárias para consultar ou administrar uma
@@ -197,7 +167,7 @@ export const HomePage = () => (
                     <Typography color="secondary.dark" variant="overline" sx={{ fontWeight: 800 }}>
                       {audience}
                     </Typography>
-                    <Typography component="h3" variant="h4">
+                    <Typography component="h2" variant="h4">
                       {title}
                     </Typography>
                   </Box>
@@ -230,19 +200,35 @@ export const HomePage = () => (
     <Box sx={{ bgcolor: 'primary.light' }}>
       <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
         <Grid container spacing={4} sx={{ alignItems: 'center' }}>
-          <Grid size={{ xs: 12, md: 8 }}>
+          <Grid size={{ xs: 12, md: 7 }}>
             <Stack spacing={1.25}>
               <Typography component="h2" variant="h3">
-                Já faz parte de uma biblioteca parceira?
+                Como você quer começar?
               </Typography>
               <Typography color="text.secondary" sx={{ maxWidth: 720 }}>
-                A página de acesso identifica quem utiliza as funções administrativas e prepara
-                o caminho para as futuras rotas protegidas da aplicação.
+                Leitores podem consultar o catálogo livremente. Administradores entram na
+                plataforma para gerenciar sua biblioteca.
               </Typography>
             </Stack>
           </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Stack sx={{ alignItems: { xs: 'flex-start', md: 'flex-end' } }}>
+          <Grid size={{ xs: 12, md: 5 }}>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={2}
+              sx={{
+                alignItems: { xs: 'stretch', sm: 'center' },
+                justifyContent: { md: 'flex-end' },
+              }}
+            >
+              <Button
+                component={RouterLink}
+                to="/catalogo"
+                variant="outlined"
+                size="large"
+                startIcon={<SearchRoundedIcon />}
+              >
+                Explorar catálogo
+              </Button>
               <Button
                 component={RouterLink}
                 to="/login"
@@ -250,7 +236,7 @@ export const HomePage = () => (
                 size="large"
                 startIcon={<LoginRoundedIcon />}
               >
-                Ir para o login
+                Acessar administração
               </Button>
             </Stack>
           </Grid>

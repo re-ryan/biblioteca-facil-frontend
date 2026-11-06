@@ -21,8 +21,6 @@ import { Link as RouterLink, Outlet, useLocation } from 'react-router-dom'
 
 const navigation = [
   { label: 'Início', path: '/' },
-  { label: 'Catálogo', path: '/catalogo' },
-  { label: 'Administração', path: '/admin' },
 ]
 
 export const AppLayout = () => {
