@@ -21,6 +21,10 @@ describe('HomePage', () => {
     ).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /módulo leitor/i })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /módulo biblioteca/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /como funciona o acesso/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /preciso de uma conta para consultar o catálogo/i }),
+    ).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /acessar catálogo/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /conhecer área administrativa/i })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: /entrar na plataforma/i })).toHaveAttribute(
