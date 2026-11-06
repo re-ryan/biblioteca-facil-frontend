@@ -1,9 +1,9 @@
-import AdminPanelSettingsRoundedIcon from '@mui/icons-material/AdminPanelSettingsRounded'
+import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import AutoStoriesRoundedIcon from '@mui/icons-material/AutoStoriesRounded'
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded'
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
+import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded'
 import {
   Box,
   Button,
@@ -19,17 +19,15 @@ import { Link as RouterLink } from 'react-router-dom'
 
 const modules = [
   {
-    icon: <SearchRoundedIcon fontSize="large" />,
-    audience: 'Módulo Catálogo',
-    title: 'Leitor',
+    icon: <MenuBookRoundedIcon fontSize="large" />,
+    audience: 'Módulo Leitor',
     description:
       'Encontra livros nas bibliotecas cadastradas, consulta os detalhes do acervo e solicita reservas.',
     features: ['Pesquisar livros', 'Consultar disponibilidade', 'Solicitar reservas'],
   },
   {
-    icon: <AdminPanelSettingsRoundedIcon fontSize="large" />,
-    audience: 'Módulo Administração',
-    title: 'Administrador',
+    icon: <AccountBalanceRoundedIcon fontSize="large" />,
+    audience: 'Módulo Biblioteca',
     description:
       'Gerencia as informações da sua biblioteca, mantém o acervo atualizado e acompanha as solicitações dos leitores.',
     features: ['Gerenciar a biblioteca', 'Cadastrar e atualizar o acervo', 'Acompanhar solicitações'],
@@ -140,8 +138,8 @@ export const HomePage = () => (
       </Stack>
 
       <Grid container spacing={3}>
-        {modules.map(({ icon, audience, title, description, features }) => (
-          <Grid key={title} size={{ xs: 12, md: 6 }}>
+        {modules.map(({ icon, audience, description, features }) => (
+          <Grid key={audience} size={{ xs: 12, md: 6 }}>
             <Card sx={{ height: '100%' }}>
               <CardContent sx={{ p: { xs: 3.5, sm: 4 } }}>
                 <Stack spacing={2.5}>
@@ -159,11 +157,13 @@ export const HomePage = () => (
                     {icon}
                   </Box>
                   <Box>
-                    <Typography color="secondary.dark" variant="overline" sx={{ fontWeight: 800 }}>
+                    <Typography
+                      component="h2"
+                      color="secondary.dark"
+                      variant="overline"
+                      sx={{ fontWeight: 800 }}
+                    >
                       {audience}
-                    </Typography>
-                    <Typography component="h2" variant="h4">
-                      {title}
                     </Typography>
                   </Box>
                   <Typography color="text.secondary">{description}</Typography>

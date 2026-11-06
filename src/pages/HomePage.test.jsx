@@ -19,8 +19,8 @@ describe('HomePage', () => {
         name: /o livro que você procura pode estar mais perto do que imagina/i,
       }),
     ).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: /^leitor$/i })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: /^administrador$/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /módulo leitor/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /módulo biblioteca/i })).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /acessar catálogo/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /conhecer área administrativa/i })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: /entrar na plataforma/i })).toHaveAttribute(
