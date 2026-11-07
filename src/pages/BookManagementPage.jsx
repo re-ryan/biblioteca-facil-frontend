@@ -25,6 +25,7 @@ import { BookCard } from '../features/books/components/BookCard'
 import { BookForm } from '../features/books/components/BookForm'
 import { BookSearchForm } from '../features/books/components/BookSearchForm'
 import { initialBooks } from '../features/books/data/initialBooks'
+import { useBookForm } from '../features/books/hooks/useBookForm'
 import {
   createBook,
   hideBook,
@@ -32,71 +33,13 @@ import {
   updateBook,
 } from '../features/books/services/bookCrud'
 
-const emptyForm = {
-  titulo: '',
-  isbn10: '',
-  isbn13: '',
-  editora: '',
-  anoPublicacao: '',
-  edicao: '',
-  descricao: '',
-  urlImagemCapa: '',
-}
-
-const bookToForm = ({
-  titulo,
-  isbn10,
-  isbn13,
-  editora,
-  anoPublicacao,
-  edicao,
-  descricao,
-  urlImagemCapa,
-}) => ({
-  titulo,
-  isbn10: isbn10 || '',
-  isbn13: isbn13 || '',
-  editora: editora || '',
-  anoPublicacao: anoPublicacao ? String(anoPublicacao) : '',
-  edicao: edicao || '',
-  descricao: descricao || '',
-  urlImagemCapa: urlImagemCapa || '',
-})
-
-const validateBook = ({ titulo, isbn10, isbn13, anoPublicacao }) => {
-  const errors = {}
-  const normalizedIsbn10 = isbn10.replace(/[-\s]/g, '')
-  const normalizedIsbn13 = isbn13.replace(/[-\s]/g, '')
-
-  if (!titulo.trim()) {
-    errors.titulo = 'Informe o título do livro.'
-  }
-
-  if (!normalizedIsbn10 && !normalizedIsbn13) {
-    errors.isbn = 'Informe o ISBN-10 ou o ISBN-13.'
-  } else if (normalizedIsbn10 && normalizedIsbn10.length !== 10) {
-    errors.isbn = 'O ISBN-10 deve possuir 10 caracteres.'
-  } else if (normalizedIsbn13 && normalizedIsbn13.length !== 13) {
-    errors.isbn = 'O ISBN-13 deve possuir 13 números.'
-  }
-
-  if (anoPublicacao && (!Number.isInteger(Number(anoPublicacao)) || Number(anoPublicacao) <= 0)) {
-    errors.anoPublicacao = 'Informe um ano positivo.'
-  }
-
-  return errors
-}
-
 export const BookManagementPage = () => {
   const [books, setBooks] = useState(initialBooks)
   const [searchInput, setSearchInput] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
-  const [formOpen, setFormOpen] = useState(false)
-  const [editingBookId, setEditingBookId] = useState(null)
-  const [formValues, setFormValues] = useState(emptyForm)
-  const [formErrors, setFormErrors] = useState({})
   const [bookToHide, setBookToHide] = useState(null)
   const [message, setMessage] = useState('')
+  const bookForm = useBookForm()
   const visibleBooks = listActiveBooks(books, searchTerm)
 
   const handleSearch = (event) => {
@@ -109,48 +52,24 @@ export const BookManagementPage = () => {
     setSearchTerm('')
   }
 
-  const handleOpenCreate = () => {
-    setEditingBookId(null)
-    setFormValues(emptyForm)
-    setFormErrors({})
-    setFormOpen(true)
-  }
-
-  const handleOpenEdit = (book) => {
-    setEditingBookId(book.id)
-    setFormValues(bookToForm(book))
-    setFormErrors({})
-    setFormOpen(true)
-  }
-
-  const handleFormChange = (field, value) => {
-    setFormValues((currentValues) => ({ ...currentValues, [field]: value }))
-    setFormErrors((currentErrors) => ({ ...currentErrors, [field]: '', isbn: '' }))
-  }
-
-  const handleCloseForm = () => {
-    setFormOpen(false)
-    setFormErrors({})
-  }
-
   const handleSave = (event) => {
     event.preventDefault()
-    const errors = validateBook(formValues)
 
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors)
+    if (!bookForm.validate()) {
       return
     }
 
-    if (editingBookId) {
-      setBooks((currentBooks) => updateBook(currentBooks, editingBookId, formValues))
-      setMessage(`“${formValues.titulo.trim()}” foi atualizado com sucesso.`)
+    if (bookForm.isEditing) {
+      setBooks((currentBooks) =>
+        updateBook(currentBooks, bookForm.editingBookId, bookForm.values),
+      )
+      setMessage(`“${bookForm.values.titulo.trim()}” foi atualizado com sucesso.`)
     } else {
-      setBooks((currentBooks) => createBook(currentBooks, formValues))
-      setMessage(`“${formValues.titulo.trim()}” foi cadastrado com sucesso.`)
+      setBooks((currentBooks) => createBook(currentBooks, bookForm.values))
+      setMessage(`“${bookForm.values.titulo.trim()}” foi cadastrado com sucesso.`)
     }
 
-    handleCloseForm()
+    bookForm.close()
   }
 
   const handleConfirmHide = () => {
@@ -168,7 +87,7 @@ export const BookManagementPage = () => {
       >
         <Box>
           <Typography variant="overline" color="primary" sx={{ fontWeight: 700 }}>
-            Feature I
+            Feature II — Parte 1
           </Typography>
           <Typography
             component="h1"
@@ -178,7 +97,7 @@ export const BookManagementPage = () => {
             CRUD de livros
           </Typography>
           <Typography color="text.secondary" sx={{ mt: 1, fontSize: '1.05rem' }}>
-            Demonstração local das operações de cadastro, consulta, edição e ocultação.
+            Estado do formulário organizado em um Hook personalizado.
           </Typography>
         </Box>
 
@@ -186,7 +105,7 @@ export const BookManagementPage = () => {
           variant="contained"
           size="large"
           startIcon={<AddRoundedIcon />}
-          onClick={handleOpenCreate}
+          onClick={bookForm.openCreate}
         >
           Cadastrar livro
         </Button>
@@ -236,7 +155,7 @@ export const BookManagementPage = () => {
                     <>
                       <BookActionButton
                         startIcon={<EditRoundedIcon />}
-                        onClick={() => handleOpenEdit(book)}
+                        onClick={() => bookForm.openEdit(book)}
                       >
                         Editar
                       </BookActionButton>
@@ -256,16 +175,16 @@ export const BookManagementPage = () => {
         )}
       </Stack>
 
-      <Dialog open={formOpen} onClose={handleCloseForm} maxWidth="md" fullWidth>
-        <DialogTitle>{editingBookId ? 'Editar livro' : 'Cadastrar livro'}</DialogTitle>
+      <Dialog open={bookForm.isOpen} onClose={bookForm.close} maxWidth="md" fullWidth>
+        <DialogTitle>{bookForm.isEditing ? 'Editar livro' : 'Cadastrar livro'}</DialogTitle>
         <DialogContent dividers>
           <BookForm
-            values={formValues}
-            errors={formErrors}
-            submitLabel={editingBookId ? 'Salvar alterações' : 'Cadastrar livro'}
-            onChange={handleFormChange}
+            values={bookForm.values}
+            errors={bookForm.errors}
+            submitLabel={bookForm.isEditing ? 'Salvar alterações' : 'Cadastrar livro'}
+            onChange={bookForm.changeField}
             onSubmit={handleSave}
-            onCancel={handleCloseForm}
+            onCancel={bookForm.close}
           />
         </DialogContent>
       </Dialog>
