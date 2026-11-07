@@ -34,7 +34,7 @@ describe('LoginPage', () => {
       </MemoryRouter>,
     )
 
-    await user.click(screen.getByRole('link', { name: /ver demonstração do crud/i }))
+    await user.click(screen.getByRole('link', { name: /acessar biblioteca linux/i }))
 
     expect(screen.getByRole('heading', { name: /crud de livros/i })).toBeInTheDocument()
   })

@@ -184,7 +184,7 @@ export const LoginPage = () => {
                     size="large"
                     startIcon={<AccountBalanceRoundedIcon />}
                   >
-                    Ver demonstração do CRUD
+                    Acessar Biblioteca Linux
                   </Button>
                   <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
                     Nesta etapa, os dados são mantidos apenas durante o uso da página.
