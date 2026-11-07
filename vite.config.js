@@ -15,6 +15,11 @@ export default defineConfig({
         target: 'http://127.0.0.1:8080',
         changeOrigin: true,
       },
+      '/isbn-api': {
+        target: 'http://127.0.0.1:8081',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/isbn-api/, '/api/isbn'),
+      },
     },
   },
 })

@@ -25,6 +25,7 @@ import { BookActionButton } from '../features/books/components/BookActionButton'
 import { BookCard } from '../features/books/components/BookCard'
 import { BookForm } from '../features/books/components/BookForm'
 import { BookSearchForm } from '../features/books/components/BookSearchForm'
+import { IsbnLookupCard } from '../features/books/components/IsbnLookupCard'
 import { useBooks } from '../features/books/context/useBooks'
 import { useBookForm } from '../features/books/hooks/useBookForm'
 import { listActiveBooks } from '../features/books/services/bookSelectors'
@@ -112,7 +113,7 @@ export const BookManagementPage = () => {
       >
         <Box>
           <Typography variant="overline" color="primary" sx={{ fontWeight: 700 }}>
-            Feature II — Parte 4
+            Feature III — Parte 1
           </Typography>
           <Typography
             component="h1"
@@ -122,7 +123,7 @@ export const BookManagementPage = () => {
             CRUD de livros
           </Typography>
           <Typography color="text.secondary" sx={{ mt: 1, fontSize: '1.05rem' }}>
-            Cadastro não controlado e edição controlada.
+            CRUD integrado e consulta externa de metadados por ISBN.
           </Typography>
         </Box>
 
@@ -148,6 +149,8 @@ export const BookManagementPage = () => {
           />
         </CardContent>
       </Card>
+
+      <IsbnLookupCard />
 
       {error && (
         <Alert
