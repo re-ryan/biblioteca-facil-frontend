@@ -22,8 +22,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useSession } from '../features/session/context/sessionContext'
+import { Link as RouterLink } from 'react-router-dom'
 
 const initialCredentials = {
   login: '',
@@ -31,9 +30,6 @@ const initialCredentials = {
 }
 
 export const LoginPage = () => {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const { startLibrarySession } = useSession()
   const [credentials, setCredentials] = useState(initialCredentials)
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -49,12 +45,6 @@ export const LoginPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     setSubmitted(true)
-  }
-
-  const handleLibraryAccess = () => {
-    startLibrarySession()
-    const destination = location.state?.from?.pathname || '/biblioteca'
-    navigate(destination, { replace: true })
   }
 
   return (
@@ -188,16 +178,16 @@ export const LoginPage = () => {
                   <Divider>ou</Divider>
 
                   <Button
-                    type="button"
+                    component={RouterLink}
+                    to="/livros"
                     variant="outlined"
                     size="large"
                     startIcon={<AccountBalanceRoundedIcon />}
-                    onClick={handleLibraryAccess}
                   >
-                    Acessar Biblioteca Linux
+                    Ver demonstração do CRUD
                   </Button>
                   <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
-                    Acesso demonstrativo vinculado à biblioteca existente no ambiente local.
+                    Nesta etapa, os dados são mantidos apenas durante o uso da página.
                   </Typography>
                 </Stack>
               </Box>

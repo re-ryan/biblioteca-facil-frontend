@@ -7,7 +7,6 @@ Frontend em React para consulta e administração do catálogo do Biblioteca Fá
 - React
 - Vite
 - React Router
-- TanStack Query
 - Material UI
 - Vitest e React Testing Library
 
@@ -15,8 +14,6 @@ Frontend em React para consulta e administração do catálogo do Biblioteca Fá
 
 - Node.js 24 ou superior
 - npm 11 ou superior
-- API do Biblioteca Fácil executando em `http://localhost:8080`
-- Serviço de consulta ISBN executando em `http://localhost:8081`
 
 ## Execução
 
@@ -42,4 +39,4 @@ npm run test
 npm run build
 ```
 
-Durante o desenvolvimento, o Vite encaminha as chamadas iniciadas por `/api` para a API principal e as chamadas iniciadas por `/isbn-api` para o serviço de consulta ISBN.
+Nesta primeira feature, o CRUD utiliza dados locais mantidos durante o uso da página. A integração com APIs será adicionada na feature correspondente.

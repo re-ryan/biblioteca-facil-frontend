@@ -1,11 +1,9 @@
 import { useState } from 'react'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded'
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
 import {
   Alert,
-  AlertTitle,
   Box,
   Button,
   Card,
@@ -18,79 +16,151 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
-  Skeleton,
   Snackbar,
   Stack,
   Typography,
 } from '@mui/material'
-import { Link as RouterLink, useLocation } from 'react-router-dom'
 import { BookCard } from '../features/books/components/BookCard'
+import { BookForm } from '../features/books/components/BookForm'
 import { BookSearchForm } from '../features/books/components/BookSearchForm'
-import { useBooks, useHideBook } from '../features/books/hooks/useBooks'
+import { initialBooks } from '../features/books/data/initialBooks'
+import {
+  createBook,
+  hideBook,
+  listActiveBooks,
+  updateBook,
+} from '../features/books/services/bookCrud'
 
-const LoadingBooks = () => (
-  <Grid container spacing={3} aria-label="Carregando livros">
-    {[1, 2, 3].map((item) => (
-      <Grid key={item} size={{ xs: 12, sm: 6, lg: 4 }}>
-        <Skeleton variant="rounded" height={440} />
-      </Grid>
-    ))}
-  </Grid>
-)
+const emptyForm = {
+  titulo: '',
+  isbn10: '',
+  isbn13: '',
+  editora: '',
+  anoPublicacao: '',
+  edicao: '',
+  descricao: '',
+  urlImagemCapa: '',
+}
+
+const bookToForm = ({
+  titulo,
+  isbn10,
+  isbn13,
+  editora,
+  anoPublicacao,
+  edicao,
+  descricao,
+  urlImagemCapa,
+}) => ({
+  titulo,
+  isbn10: isbn10 || '',
+  isbn13: isbn13 || '',
+  editora: editora || '',
+  anoPublicacao: anoPublicacao ? String(anoPublicacao) : '',
+  edicao: edicao || '',
+  descricao: descricao || '',
+  urlImagemCapa: urlImagemCapa || '',
+})
+
+const validateBook = ({ titulo, isbn10, isbn13, anoPublicacao }) => {
+  const errors = {}
+  const normalizedIsbn10 = isbn10.replace(/[-\s]/g, '')
+  const normalizedIsbn13 = isbn13.replace(/[-\s]/g, '')
+
+  if (!titulo.trim()) {
+    errors.titulo = 'Informe o título do livro.'
+  }
+
+  if (!normalizedIsbn10 && !normalizedIsbn13) {
+    errors.isbn = 'Informe o ISBN-10 ou o ISBN-13.'
+  } else if (normalizedIsbn10 && normalizedIsbn10.length !== 10) {
+    errors.isbn = 'O ISBN-10 deve possuir 10 caracteres.'
+  } else if (normalizedIsbn13 && normalizedIsbn13.length !== 13) {
+    errors.isbn = 'O ISBN-13 deve possuir 13 números.'
+  }
+
+  if (anoPublicacao && (!Number.isInteger(Number(anoPublicacao)) || Number(anoPublicacao) <= 0)) {
+    errors.anoPublicacao = 'Informe um ano positivo.'
+  }
+
+  return errors
+}
 
 export const BookManagementPage = () => {
-  const location = useLocation()
+  const [books, setBooks] = useState(initialBooks)
   const [searchInput, setSearchInput] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
+  const [formOpen, setFormOpen] = useState(false)
+  const [editingBookId, setEditingBookId] = useState(null)
+  const [formValues, setFormValues] = useState(emptyForm)
+  const [formErrors, setFormErrors] = useState({})
   const [bookToHide, setBookToHide] = useState(null)
-  const [message, setMessage] = useState(location.state?.message || '')
-  const { data: books = [], isPending, isFetching, isError, error, refetch } = useBooks(searchTerm)
-  const hideBook = useHideBook()
+  const [message, setMessage] = useState('')
+  const visibleBooks = listActiveBooks(books, searchTerm)
 
   const handleSearch = (event) => {
     event.preventDefault()
     setSearchTerm(searchInput.trim())
   }
 
-  const handleClear = () => {
+  const handleClearSearch = () => {
     setSearchInput('')
     setSearchTerm('')
   }
 
-  const handleOpenHideDialog = (book) => {
-    hideBook.reset()
-    setBookToHide(book)
+  const handleOpenCreate = () => {
+    setEditingBookId(null)
+    setFormValues(emptyForm)
+    setFormErrors({})
+    setFormOpen(true)
   }
 
-  const handleCloseHideDialog = () => {
-    if (!hideBook.isPending) {
-      setBookToHide(null)
-      hideBook.reset()
-    }
+  const handleOpenEdit = (book) => {
+    setEditingBookId(book.id)
+    setFormValues(bookToForm(book))
+    setFormErrors({})
+    setFormOpen(true)
   }
 
-  const handleConfirmHide = async () => {
-    try {
-      await hideBook.mutateAsync(bookToHide.id)
-      setMessage(`“${bookToHide.titulo}” foi ocultado do catálogo.`)
-      setBookToHide(null)
-    } catch {
-      // O diálogo permanece aberto para apresentar a mensagem da API.
+  const handleFormChange = (field, value) => {
+    setFormValues((currentValues) => ({ ...currentValues, [field]: value }))
+    setFormErrors((currentErrors) => ({ ...currentErrors, [field]: '', isbn: '' }))
+  }
+
+  const handleCloseForm = () => {
+    setFormOpen(false)
+    setEditingBookId(null)
+    setFormErrors({})
+  }
+
+  const handleSave = (event) => {
+    event.preventDefault()
+    const errors = validateBook(formValues)
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors)
+      return
     }
+
+    if (editingBookId) {
+      setBooks((currentBooks) => updateBook(currentBooks, editingBookId, formValues))
+      setMessage(`“${formValues.titulo.trim()}” foi atualizado com sucesso.`)
+    } else {
+      setBooks((currentBooks) => createBook(currentBooks, formValues))
+      setMessage(`“${formValues.titulo.trim()}” foi cadastrado com sucesso.`)
+    }
+
+    handleCloseForm()
+  }
+
+  const handleConfirmHide = () => {
+    setBooks((currentBooks) => hideBook(currentBooks, bookToHide.id))
+    setMessage(`“${bookToHide.titulo}” foi ocultado da lista.`)
+    setBookToHide(null)
   }
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 6, md: 9 } }}>
-      <Button
-        component={RouterLink}
-        to="/biblioteca"
-        startIcon={<ArrowBackRoundedIcon />}
-        color="inherit"
-        sx={{ mb: 3 }}
-      >
-        Voltar para a biblioteca
-      </Button>
-
       <Stack
         direction={{ xs: 'column', md: 'row' }}
         spacing={3}
@@ -98,26 +168,25 @@ export const BookManagementPage = () => {
       >
         <Box>
           <Typography variant="overline" color="primary" sx={{ fontWeight: 700 }}>
-            Módulo Biblioteca
+            Feature I
           </Typography>
           <Typography
             component="h1"
             variant="h2"
             sx={{ mt: 0.5, fontSize: { xs: '2.5rem', md: '3.5rem' } }}
           >
-            Gerenciar livros
+            CRUD de livros
           </Typography>
           <Typography color="text.secondary" sx={{ mt: 1, fontSize: '1.05rem' }}>
-            Cadastre, consulte, edite ou oculte livros do catálogo.
+            Demonstração local das operações de cadastro, consulta, edição e ocultação.
           </Typography>
         </Box>
 
         <Button
-          component={RouterLink}
-          to="/biblioteca/livros/novo"
           variant="contained"
           size="large"
           startIcon={<AddRoundedIcon />}
+          onClick={handleOpenCreate}
         >
           Cadastrar livro
         </Button>
@@ -129,107 +198,97 @@ export const BookManagementPage = () => {
             value={searchInput}
             onChange={setSearchInput}
             onSubmit={handleSearch}
-            onClear={handleClear}
-            loading={isFetching}
+            onClear={handleClearSearch}
+            loading={false}
           />
         </CardContent>
       </Card>
 
-      {isPending && <LoadingBooks />}
-
-      {isError && (
-        <Alert
-          severity="error"
-          action={
-            <Button color="inherit" onClick={() => refetch()}>
-              Tentar novamente
-            </Button>
-          }
+      <Stack spacing={3}>
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          spacing={1.5}
+          sx={{ alignItems: { sm: 'center' }, justifyContent: 'space-between' }}
         >
-          <AlertTitle>Não foi possível carregar os livros</AlertTitle>
-          {error.message}
-        </Alert>
-      )}
-
-      {!isPending && !isError && (
-        <Stack spacing={3}>
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={1.5}
-            sx={{ alignItems: { sm: 'center' }, justifyContent: 'space-between' }}
-          >
-            <Typography component="h2" variant="h4">
-              {searchTerm ? `Resultados para “${searchTerm}”` : 'Livros ativos'}
-            </Typography>
-            <Chip
-              color="primary"
-              variant="outlined"
-              label={`${books.length} ${books.length === 1 ? 'livro' : 'livros'}`}
-            />
-          </Stack>
-
-          {books.length === 0 ? (
-            <Alert severity="info">
-              {searchTerm
-                ? 'Nenhum livro ativo corresponde à pesquisa.'
-                : 'Nenhum livro ativo está cadastrado.'}
-            </Alert>
-          ) : (
-            <Grid container spacing={3}>
-              {books.map((book) => (
-                <Grid key={book.id} size={{ xs: 12, sm: 6, lg: 4 }}>
-                  <BookCard
-                    book={book}
-                    actions={
-                      <>
-                        <Button
-                          component={RouterLink}
-                          to={`/biblioteca/livros/${book.id}/editar`}
-                          startIcon={<EditRoundedIcon />}
-                        >
-                          Editar
-                        </Button>
-                        <Button
-                          color="error"
-                          startIcon={<VisibilityOffRoundedIcon />}
-                          onClick={() => handleOpenHideDialog(book)}
-                        >
-                          Ocultar
-                        </Button>
-                      </>
-                    }
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          )}
+          <Typography component="h2" variant="h4">
+            {searchTerm ? `Resultados para “${searchTerm}”` : 'Livros ativos'}
+          </Typography>
+          <Chip
+            color="primary"
+            variant="outlined"
+            label={`${visibleBooks.length} ${visibleBooks.length === 1 ? 'livro' : 'livros'}`}
+          />
         </Stack>
-      )}
 
-      <Dialog open={Boolean(bookToHide)} onClose={handleCloseHideDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>Ocultar livro do catálogo?</DialogTitle>
+        {visibleBooks.length === 0 ? (
+          <Alert severity="info">
+            {searchTerm
+              ? 'Nenhum livro ativo corresponde à pesquisa.'
+              : 'Nenhum livro ativo está cadastrado.'}
+          </Alert>
+        ) : (
+          <Grid container spacing={3}>
+            {visibleBooks.map((book) => (
+              <Grid key={book.id} size={{ xs: 12, sm: 6, lg: 4 }}>
+                <BookCard
+                  book={book}
+                  actions={
+                    <>
+                      <Button
+                        startIcon={<EditRoundedIcon />}
+                        onClick={() => handleOpenEdit(book)}
+                      >
+                        Editar
+                      </Button>
+                      <Button
+                        color="error"
+                        startIcon={<VisibilityOffRoundedIcon />}
+                        onClick={() => setBookToHide(book)}
+                      >
+                        Ocultar
+                      </Button>
+                    </>
+                  }
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Stack>
+
+      <Dialog open={formOpen} onClose={handleCloseForm} maxWidth="md" fullWidth>
+        <DialogTitle>{editingBookId ? 'Editar livro' : 'Cadastrar livro'}</DialogTitle>
+        <DialogContent dividers>
+          <BookForm
+            values={formValues}
+            errors={formErrors}
+            submitLabel={editingBookId ? 'Salvar alterações' : 'Cadastrar livro'}
+            onChange={handleFormChange}
+            onSubmit={handleSave}
+            onCancel={handleCloseForm}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={Boolean(bookToHide)}
+        onClose={() => setBookToHide(null)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Ocultar livro da lista?</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {bookToHide &&
-              `“${bookToHide.titulo}” deixará de aparecer nas listagens e pesquisas. O registro será mantido no banco de dados.`}
+              `“${bookToHide.titulo}” deixará de aparecer na consulta, mas continuará preservado como registro inativo.`}
           </DialogContentText>
-          {hideBook.isError && (
-            <Alert severity="error" sx={{ mt: 2 }}>
-              {hideBook.error.message}
-            </Alert>
-          )}
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button color="inherit" onClick={handleCloseHideDialog} disabled={hideBook.isPending}>
+          <Button color="inherit" onClick={() => setBookToHide(null)}>
             Cancelar
           </Button>
-          <Button
-            color="error"
-            variant="contained"
-            onClick={handleConfirmHide}
-            disabled={hideBook.isPending}
-          >
-            {hideBook.isPending ? 'Ocultando...' : 'Ocultar livro'}
+          <Button color="error" variant="contained" onClick={handleConfirmHide}>
+            Ocultar livro
           </Button>
         </DialogActions>
       </Dialog>

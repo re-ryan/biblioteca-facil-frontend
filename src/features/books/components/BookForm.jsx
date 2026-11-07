@@ -1,18 +1,14 @@
-import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded'
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded'
-import { Alert, Box, Button, Grid, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, Grid, Stack, TextField, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 
 export const BookForm = ({
   values,
   errors,
-  feedback,
-  saving,
-  lookingUpIsbn,
+  submitLabel,
   onChange,
   onSubmit,
   onCancel,
-  onIsbnLookup,
 }) => (
   <Box component="form" noValidate onSubmit={onSubmit}>
     <Stack spacing={3}>
@@ -21,11 +17,9 @@ export const BookForm = ({
           Dados bibliográficos
         </Typography>
         <Typography color="text.secondary">
-          Informe um ISBN para consultar os metadados ou preencha os campos manualmente.
+          Preencha os campos para incluir ou atualizar o livro na demonstração.
         </Typography>
       </Box>
-
-      {feedback && <Alert severity={feedback.severity}>{feedback.message}</Alert>}
 
       <Grid container spacing={2.5}>
         <Grid size={{ xs: 12, md: 8 }}>
@@ -40,7 +34,7 @@ export const BookForm = ({
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 7, md: 5 }}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
             fullWidth
             label="ISBN-13"
@@ -51,20 +45,7 @@ export const BookForm = ({
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 5, md: 3 }} sx={{ display: 'flex' }}>
-          <Button
-            fullWidth
-            type="button"
-            variant="outlined"
-            startIcon={<AutoFixHighRoundedIcon />}
-            disabled={lookingUpIsbn || saving}
-            onClick={onIsbnLookup}
-          >
-            {lookingUpIsbn ? 'Consultando...' : 'Consultar ISBN'}
-          </Button>
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
             fullWidth
             label="ISBN-10"
@@ -132,7 +113,7 @@ export const BookForm = ({
         spacing={1.5}
         sx={{ justifyContent: 'flex-end' }}
       >
-        <Button type="button" size="large" color="inherit" onClick={onCancel} disabled={saving}>
+        <Button type="button" size="large" color="inherit" onClick={onCancel}>
           Cancelar
         </Button>
         <Button
@@ -140,9 +121,8 @@ export const BookForm = ({
           size="large"
           variant="contained"
           startIcon={<SaveRoundedIcon />}
-          disabled={saving || lookingUpIsbn}
         >
-          {saving ? 'Salvando...' : 'Salvar livro'}
+          {submitLabel}
         </Button>
       </Stack>
     </Stack>
@@ -161,14 +141,8 @@ BookForm.propTypes = {
     urlImagemCapa: PropTypes.string.isRequired,
   }).isRequired,
   errors: PropTypes.objectOf(PropTypes.string).isRequired,
-  feedback: PropTypes.shape({
-    severity: PropTypes.oneOf(['success', 'error', 'info', 'warning']).isRequired,
-    message: PropTypes.string.isRequired,
-  }),
-  saving: PropTypes.bool.isRequired,
-  lookingUpIsbn: PropTypes.bool.isRequired,
+  submitLabel: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  onIsbnLookup: PropTypes.func.isRequired,
 }

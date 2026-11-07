@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded'
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded'
 import {
@@ -18,28 +17,16 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material'
-import { Link as RouterLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { useSession } from '../../features/session/context/sessionContext'
+import { Link as RouterLink, Outlet, useLocation } from 'react-router-dom'
 
-const publicNavigation = [{ label: 'Início', path: '/' }]
+const navigation = [{ label: 'Início', path: '/' }]
 
 export const AppLayout = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
-  const navigate = useNavigate()
-  const { isAuthenticated, endSession } = useSession()
-  const navigation = isAuthenticated
-    ? [...publicNavigation, { label: 'Biblioteca', path: '/biblioteca' }]
-    : publicNavigation
 
   const isCurrentPath = (path) =>
     path === '/' ? location.pathname === path : location.pathname.startsWith(path)
-
-  const handleLogout = () => {
-    endSession()
-    setMenuOpen(false)
-    navigate('/login')
-  }
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -120,28 +107,16 @@ export const AppLayout = () => {
               ))}
             </Stack>
 
-            {isAuthenticated ? (
-              <Button
-                color="primary"
-                variant="outlined"
-                startIcon={<LogoutRoundedIcon />}
-                onClick={handleLogout}
-                sx={{ display: { xs: 'none', md: 'inline-flex' }, ml: 1.5 }}
-              >
-                Sair
-              </Button>
-            ) : (
-              <Button
-                component={RouterLink}
-                to="/login"
-                color="primary"
-                variant={isCurrentPath('/login') ? 'contained' : 'outlined'}
-                startIcon={<LoginRoundedIcon />}
-                sx={{ display: { xs: 'none', md: 'inline-flex' }, ml: 1.5 }}
-              >
-                Entrar
-              </Button>
-            )}
+            <Button
+              component={RouterLink}
+              to="/login"
+              color="primary"
+              variant={isCurrentPath('/login') ? 'contained' : 'outlined'}
+              startIcon={<LoginRoundedIcon />}
+              sx={{ display: { xs: 'none', md: 'inline-flex' }, ml: 1.5 }}
+            >
+              Entrar
+            </Button>
 
             <IconButton
               aria-label="Abrir menu de navegação"
@@ -175,22 +150,15 @@ export const AppLayout = () => {
           </List>
           <Divider />
           <List>
-            {isAuthenticated ? (
-              <ListItemButton onClick={handleLogout}>
-                <LogoutRoundedIcon color="primary" sx={{ mr: 2 }} />
-                <ListItemText primary="Sair" />
-              </ListItemButton>
-            ) : (
-              <ListItemButton
-                component={RouterLink}
-                to="/login"
-                selected={isCurrentPath('/login')}
-                onClick={() => setMenuOpen(false)}
-              >
-                <LoginRoundedIcon color="primary" sx={{ mr: 2 }} />
-                <ListItemText primary="Entrar" />
-              </ListItemButton>
-            )}
+            <ListItemButton
+              component={RouterLink}
+              to="/login"
+              selected={isCurrentPath('/login')}
+              onClick={() => setMenuOpen(false)}
+            >
+              <LoginRoundedIcon color="primary" sx={{ mr: 2 }} />
+              <ListItemText primary="Entrar" />
+            </ListItemButton>
           </List>
         </Box>
       </Drawer>
