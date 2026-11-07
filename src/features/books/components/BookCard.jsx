@@ -2,10 +2,10 @@ import BusinessRoundedIcon from '@mui/icons-material/BusinessRounded'
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded'
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded'
 import QrCode2RoundedIcon from '@mui/icons-material/QrCode2Rounded'
-import { Box, Card, CardContent, Chip, Stack, Typography } from '@mui/material'
+import { Box, Card, CardActions, CardContent, Chip, Stack, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 
-export const BookCard = ({ book }) => {
+export const BookCard = ({ book, actions = null }) => {
   const { titulo, isbn10, isbn13, editora, anoPublicacao, edicao, urlImagemCapa } = book
   const isbn = isbn13 || isbn10
 
@@ -61,6 +61,12 @@ export const BookCard = ({ book }) => {
           </Stack>
         </Stack>
       </CardContent>
+
+      {actions && (
+        <CardActions sx={{ px: 3, pb: 3, pt: 0, gap: 1, flexWrap: 'wrap' }}>
+          {actions}
+        </CardActions>
+      )}
     </Card>
   )
 }
@@ -75,4 +81,5 @@ BookCard.propTypes = {
     edicao: PropTypes.string,
     urlImagemCapa: PropTypes.string,
   }).isRequired,
+  actions: PropTypes.node,
 }

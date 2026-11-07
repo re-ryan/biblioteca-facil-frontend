@@ -218,19 +218,19 @@ export const LibraryPage = () => {
                       Livros
                     </Typography>
                     <Typography sx={{ color: 'rgba(255, 255, 255, 0.74)' }}>
-                      Consulte os livros cadastrados. O cadastro e a manutenção serão adicionados
-                      na próxima etapa.
+                      Cadastre novas obras, atualize os dados bibliográficos e oculte registros
+                      que não devem aparecer no catálogo.
                     </Typography>
                   </Box>
                   <Box sx={{ flexGrow: 1 }} />
                   <Button
                     component={RouterLink}
-                    to="/catalogo"
+                    to="/biblioteca/livros"
                     variant="contained"
                     color="secondary"
                     size="large"
                   >
-                    Consultar catálogo
+                    Gerenciar livros
                   </Button>
                 </Stack>
               </CardContent>

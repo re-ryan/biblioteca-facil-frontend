@@ -14,6 +14,12 @@ const pages = {
   library: lazy(() =>
     import('../pages/LibraryPage').then(({ LibraryPage: page }) => ({ default: page })),
   ),
+  bookManagement: lazy(() =>
+    import('../pages/BookManagementPage').then(({ BookManagementPage: page }) => ({ default: page })),
+  ),
+  bookForm: lazy(() =>
+    import('../pages/BookFormPage').then(({ BookFormPage: page }) => ({ default: page })),
+  ),
   login: lazy(() =>
     import('../pages/LoginPage').then(({ LoginPage: page }) => ({ default: page })),
   ),
@@ -58,6 +64,18 @@ export const router = createBrowserRouter(
             {
               path: 'biblioteca',
               element: withLoading(createElement(pages.library)),
+            },
+            {
+              path: 'biblioteca/livros',
+              element: withLoading(createElement(pages.bookManagement)),
+            },
+            {
+              path: 'biblioteca/livros/novo',
+              element: withLoading(createElement(pages.bookForm)),
+            },
+            {
+              path: 'biblioteca/livros/:bookId/editar',
+              element: withLoading(createElement(pages.bookForm)),
             },
             {
               path: 'admin',
