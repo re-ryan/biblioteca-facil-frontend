@@ -130,7 +130,6 @@ export const BookManagementPage = () => {
 
   const handleCloseForm = () => {
     setFormOpen(false)
-    setEditingBookId(null)
     setFormErrors({})
   }
 

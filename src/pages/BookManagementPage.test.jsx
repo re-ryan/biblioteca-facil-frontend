@@ -64,4 +64,17 @@ describe('BookManagementPage', () => {
     expect(within(dialog).getByText(/informe o título do livro/i)).toBeInTheDocument()
     expect(within(dialog).getByText(/informe o isbn-10 ou o isbn-13/i)).toBeInTheDocument()
   })
+
+  it('mantém o modo de edição durante a animação de fechamento', async () => {
+    const user = userEvent.setup()
+
+    render(<BookManagementPage />)
+    await user.click(screen.getAllByRole('button', { name: /editar/i })[0])
+
+    const dialog = screen.getByRole('dialog', { name: /editar livro/i })
+    await user.click(within(dialog).getByRole('button', { name: /cancelar/i }))
+
+    expect(within(dialog).getByRole('button', { name: /salvar alterações/i })).toBeInTheDocument()
+    await waitForElementToBeRemoved(dialog)
+  })
 })
