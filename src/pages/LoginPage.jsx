@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded'
+import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded'
 import AutoStoriesRoundedIcon from '@mui/icons-material/AutoStoriesRounded'
 import LockRoundedIcon from '@mui/icons-material/LockRounded'
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
@@ -12,6 +13,7 @@ import {
   CardContent,
   Checkbox,
   Container,
+  Divider,
   FormControlLabel,
   Grid,
   IconButton,
@@ -20,6 +22,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useSession } from '../features/session/context/sessionContext'
 
 const initialCredentials = {
   login: '',
@@ -27,6 +31,9 @@ const initialCredentials = {
 }
 
 export const LoginPage = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { startLibrarySession } = useSession()
   const [credentials, setCredentials] = useState(initialCredentials)
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -42,6 +49,12 @@ export const LoginPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     setSubmitted(true)
+  }
+
+  const handleLibraryAccess = () => {
+    startLibrarySession()
+    const destination = location.state?.from?.pathname || '/biblioteca'
+    navigate(destination, { replace: true })
   }
 
   return (
@@ -171,6 +184,21 @@ export const LoginPage = () => {
                   <Button type="submit" variant="contained" size="large">
                     Entrar
                   </Button>
+
+                  <Divider>ou</Divider>
+
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    size="large"
+                    startIcon={<AccountBalanceRoundedIcon />}
+                    onClick={handleLibraryAccess}
+                  >
+                    Acessar Biblioteca Linux
+                  </Button>
+                  <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+                    Acesso demonstrativo vinculado à biblioteca existente no ambiente local.
+                  </Typography>
                 </Stack>
               </Box>
             </CardContent>

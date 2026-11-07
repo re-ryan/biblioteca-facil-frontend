@@ -1,7 +1,8 @@
 import { createElement, lazy, Suspense } from 'react'
 import { CircularProgress, Stack } from '@mui/material'
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AppLayout } from '../components/layout/AppLayout'
+import { ProtectedRoute } from '../features/session/components/ProtectedRoute'
 
 const pages = {
   home: lazy(() =>
@@ -10,8 +11,8 @@ const pages = {
   catalog: lazy(() =>
     import('../pages/CatalogPage').then(({ CatalogPage: page }) => ({ default: page })),
   ),
-  admin: lazy(() =>
-    import('../pages/AdminPage').then(({ AdminPage: page }) => ({ default: page })),
+  library: lazy(() =>
+    import('../pages/LibraryPage').then(({ LibraryPage: page }) => ({ default: page })),
   ),
   login: lazy(() =>
     import('../pages/LoginPage').then(({ LoginPage: page }) => ({ default: page })),
@@ -48,12 +49,21 @@ export const router = createBrowserRouter(
           element: withLoading(createElement(pages.catalog)),
         },
         {
-          path: 'admin',
-          element: withLoading(createElement(pages.admin)),
-        },
-        {
           path: 'login',
           element: withLoading(createElement(pages.login)),
+        },
+        {
+          element: <ProtectedRoute />,
+          children: [
+            {
+              path: 'biblioteca',
+              element: withLoading(createElement(pages.library)),
+            },
+            {
+              path: 'admin',
+              element: <Navigate to="/biblioteca" replace />,
+            },
+          ],
         },
         {
           path: '*',
