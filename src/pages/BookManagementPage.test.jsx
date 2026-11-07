@@ -1,8 +1,79 @@
 import { render, screen, waitForElementToBeRemoved, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { BooksProvider } from '../features/books/context/BooksProvider'
+import {
+  createBook,
+  hideBook,
+  listBooks,
+  updateBook,
+} from '../features/books/services/bookApi'
 import { BookManagementPage } from './BookManagementPage'
+
+vi.mock('../features/books/services/bookApi', () => ({
+  listBooks: vi.fn(),
+  createBook: vi.fn(),
+  updateBook: vi.fn(),
+  hideBook: vi.fn(),
+}))
+
+const books = [
+  {
+    id: 1,
+    titulo: 'Domain-Driven Design',
+    isbn10: '',
+    isbn13: '9780321125217',
+    editora: 'Addison-Wesley',
+    anoPublicacao: 2003,
+    edicao: '1',
+    descricao: '',
+    urlImagemCapa: '',
+    ativo: true,
+  },
+  {
+    id: 2,
+    titulo: 'Clean Architecture',
+    isbn10: '',
+    isbn13: '9780134494166',
+    editora: 'Prentice Hall',
+    anoPublicacao: 2017,
+    edicao: '1',
+    descricao: '',
+    urlImagemCapa: '',
+    ativo: true,
+  },
+  {
+    id: 3,
+    titulo: 'Refactoring',
+    isbn10: '',
+    isbn13: '9780134757599',
+    editora: 'Addison-Wesley',
+    anoPublicacao: 2018,
+    edicao: '2',
+    descricao: '',
+    urlImagemCapa: '',
+    ativo: true,
+  },
+  {
+    id: 4,
+    titulo: 'Implementing Domain-Driven Design',
+    isbn10: '',
+    isbn13: '9780321834577',
+    editora: 'Addison-Wesley',
+    anoPublicacao: 2013,
+    edicao: '1',
+    descricao: '',
+    urlImagemCapa: '',
+    ativo: true,
+  },
+]
+
+const bookFromForm = (id, formValues) => ({
+  id,
+  ...formValues,
+  anoPublicacao: formValues.anoPublicacao ? Number(formValues.anoPublicacao) : null,
+  ativo: true,
+})
 
 const renderPage = () =>
   render(
@@ -12,12 +83,24 @@ const renderPage = () =>
   )
 
 describe('BookManagementPage', () => {
-  it('cadastra, edita, pesquisa e oculta um livro localmente', async () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    listBooks.mockResolvedValue(books)
+    createBook.mockImplementation((formValues) =>
+      Promise.resolve(bookFromForm(5, formValues)),
+    )
+    updateBook.mockImplementation((bookId, formValues) =>
+      Promise.resolve(bookFromForm(bookId, formValues)),
+    )
+    hideBook.mockResolvedValue(null)
+  })
+
+  it('cadastra, edita, pesquisa e oculta um livro pela API', async () => {
     const user = userEvent.setup()
 
     renderPage()
 
-    expect(screen.getByText('4 livros')).toBeInTheDocument()
+    expect(await screen.findByText('4 livros')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /cadastrar livro/i }))
     const createDialog = screen.getByRole('dialog', { name: /cadastrar livro/i })
@@ -65,6 +148,7 @@ describe('BookManagementPage', () => {
     const user = userEvent.setup()
 
     renderPage()
+    await screen.findByText('4 livros')
     await user.click(screen.getByRole('button', { name: /cadastrar livro/i }))
     const dialog = screen.getByRole('dialog', { name: /cadastrar livro/i })
     await user.click(within(dialog).getByRole('button', { name: /cadastrar livro/i }))
@@ -77,6 +161,7 @@ describe('BookManagementPage', () => {
     const user = userEvent.setup()
 
     renderPage()
+    await screen.findByText('4 livros')
     await user.click(screen.getAllByRole('button', { name: /editar/i })[0])
 
     const dialog = screen.getByRole('dialog', { name: /editar livro/i })
@@ -84,5 +169,14 @@ describe('BookManagementPage', () => {
 
     expect(within(dialog).getByRole('button', { name: /salvar alterações/i })).toBeInTheDocument()
     await waitForElementToBeRemoved(dialog)
+  })
+
+  it('exibe a falha de carregamento e permite tentar novamente', async () => {
+    listBooks.mockRejectedValueOnce(new Error('API de livros indisponível.'))
+
+    renderPage()
+
+    expect(await screen.findByText('API de livros indisponível.')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /tentar novamente/i })).toBeInTheDocument()
   })
 })

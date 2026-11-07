@@ -1,13 +1,24 @@
 import { act, renderHook } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { initialBooks } from '../data/initialBooks'
 import { useBookForm } from './useBookForm'
+
+const book = {
+  id: 1,
+  titulo: 'Domain-Driven Design',
+  isbn10: '',
+  isbn13: '9780321125217',
+  editora: 'Addison-Wesley',
+  anoPublicacao: 2003,
+  edicao: '1',
+  descricao: '',
+  urlImagemCapa: '',
+}
 
 describe('useBookForm', () => {
   it('controla os modos de cadastro e edição', () => {
     const { result } = renderHook(() => useBookForm())
 
-    act(() => result.current.openEdit(initialBooks[0]))
+    act(() => result.current.openEdit(book))
     expect(result.current.isOpen).toBe(true)
     expect(result.current.isEditing).toBe(true)
     expect(result.current.values.titulo).toBe('Domain-Driven Design')

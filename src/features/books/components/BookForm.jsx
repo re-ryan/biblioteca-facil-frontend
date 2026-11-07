@@ -9,6 +9,7 @@ export const BookForm = ({
   onChange,
   onSubmit,
   onCancel,
+  loading,
 }) => (
   <Box component="form" noValidate onSubmit={onSubmit}>
     <Stack spacing={3}>
@@ -17,7 +18,7 @@ export const BookForm = ({
           Dados bibliográficos
         </Typography>
         <Typography color="text.secondary">
-          Preencha os campos para incluir ou atualizar o livro na demonstração.
+          Preencha os campos para incluir ou atualizar o livro na biblioteca.
         </Typography>
       </Box>
 
@@ -113,7 +114,7 @@ export const BookForm = ({
         spacing={1.5}
         sx={{ justifyContent: 'flex-end' }}
       >
-        <Button type="button" size="large" color="inherit" onClick={onCancel}>
+        <Button type="button" size="large" color="inherit" onClick={onCancel} disabled={loading}>
           Cancelar
         </Button>
         <Button
@@ -121,8 +122,9 @@ export const BookForm = ({
           size="large"
           variant="contained"
           startIcon={<SaveRoundedIcon />}
+          disabled={loading}
         >
-          {submitLabel}
+          {loading ? 'Salvando...' : submitLabel}
         </Button>
       </Stack>
     </Stack>
@@ -145,4 +147,5 @@ BookForm.propTypes = {
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 }
