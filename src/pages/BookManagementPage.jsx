@@ -20,6 +20,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
+import { BookActionButton } from '../features/books/components/BookActionButton'
 import { BookCard } from '../features/books/components/BookCard'
 import { BookForm } from '../features/books/components/BookForm'
 import { BookSearchForm } from '../features/books/components/BookSearchForm'
@@ -234,19 +235,19 @@ export const BookManagementPage = () => {
                   book={book}
                   actions={
                     <>
-                      <Button
+                      <BookActionButton
                         startIcon={<EditRoundedIcon />}
                         onClick={() => handleOpenEdit(book)}
                       >
                         Editar
-                      </Button>
-                      <Button
+                      </BookActionButton>
+                      <BookActionButton
                         color="error"
                         startIcon={<VisibilityOffRoundedIcon />}
                         onClick={() => setBookToHide(book)}
                       >
                         Ocultar
-                      </Button>
+                      </BookActionButton>
                     </>
                   }
                 />
