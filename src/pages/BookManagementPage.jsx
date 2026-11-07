@@ -24,17 +24,12 @@ import { BookActionButton } from '../features/books/components/BookActionButton'
 import { BookCard } from '../features/books/components/BookCard'
 import { BookForm } from '../features/books/components/BookForm'
 import { BookSearchForm } from '../features/books/components/BookSearchForm'
-import { initialBooks } from '../features/books/data/initialBooks'
+import { useBooks } from '../features/books/context/useBooks'
 import { useBookForm } from '../features/books/hooks/useBookForm'
-import {
-  createBook,
-  hideBook,
-  listActiveBooks,
-  updateBook,
-} from '../features/books/services/bookCrud'
+import { listActiveBooks } from '../features/books/services/bookCrud'
 
 export const BookManagementPage = () => {
-  const [books, setBooks] = useState(initialBooks)
+  const { books, addBook, editBook, hideBook } = useBooks()
   const [searchInput, setSearchInput] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [bookToHide, setBookToHide] = useState(null)
@@ -60,12 +55,10 @@ export const BookManagementPage = () => {
     }
 
     if (bookForm.isEditing) {
-      setBooks((currentBooks) =>
-        updateBook(currentBooks, bookForm.editingBookId, bookForm.values),
-      )
+      editBook(bookForm.editingBookId, bookForm.values)
       setMessage(`“${bookForm.values.titulo.trim()}” foi atualizado com sucesso.`)
     } else {
-      setBooks((currentBooks) => createBook(currentBooks, bookForm.values))
+      addBook(bookForm.values)
       setMessage(`“${bookForm.values.titulo.trim()}” foi cadastrado com sucesso.`)
     }
 
@@ -73,7 +66,7 @@ export const BookManagementPage = () => {
   }
 
   const handleConfirmHide = () => {
-    setBooks((currentBooks) => hideBook(currentBooks, bookToHide.id))
+    hideBook(bookToHide.id)
     setMessage(`“${bookToHide.titulo}” foi ocultado da lista.`)
     setBookToHide(null)
   }
@@ -87,7 +80,7 @@ export const BookManagementPage = () => {
       >
         <Box>
           <Typography variant="overline" color="primary" sx={{ fontWeight: 700 }}>
-            Feature II — Parte 1
+            Feature II — Parte 2
           </Typography>
           <Typography
             component="h1"
@@ -97,7 +90,7 @@ export const BookManagementPage = () => {
             CRUD de livros
           </Typography>
           <Typography color="text.secondary" sx={{ mt: 1, fontSize: '1.05rem' }}>
-            Estado do formulário organizado em um Hook personalizado.
+            Lista e operações compartilhadas pela Context API.
           </Typography>
         </Box>
 

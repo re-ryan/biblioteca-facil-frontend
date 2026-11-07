@@ -1,13 +1,21 @@
 import { render, screen, waitForElementToBeRemoved, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
+import { BooksProvider } from '../features/books/context/BooksProvider'
 import { BookManagementPage } from './BookManagementPage'
+
+const renderPage = () =>
+  render(
+    <BooksProvider>
+      <BookManagementPage />
+    </BooksProvider>,
+  )
 
 describe('BookManagementPage', () => {
   it('cadastra, edita, pesquisa e oculta um livro localmente', async () => {
     const user = userEvent.setup()
 
-    render(<BookManagementPage />)
+    renderPage()
 
     expect(screen.getByText('4 livros')).toBeInTheDocument()
 
@@ -56,7 +64,7 @@ describe('BookManagementPage', () => {
   it('valida os campos obrigatórios antes do cadastro', async () => {
     const user = userEvent.setup()
 
-    render(<BookManagementPage />)
+    renderPage()
     await user.click(screen.getByRole('button', { name: /cadastrar livro/i }))
     const dialog = screen.getByRole('dialog', { name: /cadastrar livro/i })
     await user.click(within(dialog).getByRole('button', { name: /cadastrar livro/i }))
@@ -68,7 +76,7 @@ describe('BookManagementPage', () => {
   it('mantém o modo de edição durante a animação de fechamento', async () => {
     const user = userEvent.setup()
 
-    render(<BookManagementPage />)
+    renderPage()
     await user.click(screen.getAllByRole('button', { name: /editar/i })[0])
 
     const dialog = screen.getByRole('dialog', { name: /editar livro/i })
