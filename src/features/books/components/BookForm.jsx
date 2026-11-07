@@ -2,11 +2,26 @@ import SaveRoundedIcon from '@mui/icons-material/SaveRounded'
 import { Box, Button, Grid, Stack, TextField, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 
+const createFieldProps = (field, controlled, values, onChange, onFieldChange) => ({
+  name: field,
+  ...(controlled
+    ? {
+        value: values[field],
+        onChange: (event) => onChange(field, event.target.value),
+      }
+    : {
+        defaultValue: values[field],
+        onChange: () => onFieldChange(field),
+      }),
+})
+
 export const BookForm = ({
   values,
   errors,
   submitLabel,
+  controlled,
   onChange,
+  onFieldChange,
   onSubmit,
   onCancel,
   loading,
@@ -28,10 +43,9 @@ export const BookForm = ({
             fullWidth
             required
             label="Título"
-            value={values.titulo}
             error={Boolean(errors.titulo)}
             helperText={errors.titulo}
-            onChange={(event) => onChange('titulo', event.target.value)}
+            {...createFieldProps('titulo', controlled, values, onChange, onFieldChange)}
           />
         </Grid>
 
@@ -39,10 +53,9 @@ export const BookForm = ({
           <TextField
             fullWidth
             label="ISBN-13"
-            value={values.isbn13}
             error={Boolean(errors.isbn)}
             helperText={errors.isbn || 'Aceita números com ou sem hífens.'}
-            onChange={(event) => onChange('isbn13', event.target.value)}
+            {...createFieldProps('isbn13', controlled, values, onChange, onFieldChange)}
           />
         </Grid>
 
@@ -50,9 +63,8 @@ export const BookForm = ({
           <TextField
             fullWidth
             label="ISBN-10"
-            value={values.isbn10}
             error={Boolean(errors.isbn)}
-            onChange={(event) => onChange('isbn10', event.target.value)}
+            {...createFieldProps('isbn10', controlled, values, onChange, onFieldChange)}
           />
         </Grid>
 
@@ -60,8 +72,7 @@ export const BookForm = ({
           <TextField
             fullWidth
             label="Editora"
-            value={values.editora}
-            onChange={(event) => onChange('editora', event.target.value)}
+            {...createFieldProps('editora', controlled, values, onChange, onFieldChange)}
           />
         </Grid>
 
@@ -70,11 +81,10 @@ export const BookForm = ({
             fullWidth
             label="Ano de publicação"
             type="number"
-            value={values.anoPublicacao}
             error={Boolean(errors.anoPublicacao)}
             helperText={errors.anoPublicacao}
-            onChange={(event) => onChange('anoPublicacao', event.target.value)}
             slotProps={{ htmlInput: { min: 1 } }}
+            {...createFieldProps('anoPublicacao', controlled, values, onChange, onFieldChange)}
           />
         </Grid>
 
@@ -82,8 +92,7 @@ export const BookForm = ({
           <TextField
             fullWidth
             label="Edição"
-            value={values.edicao}
-            onChange={(event) => onChange('edicao', event.target.value)}
+            {...createFieldProps('edicao', controlled, values, onChange, onFieldChange)}
           />
         </Grid>
 
@@ -92,8 +101,7 @@ export const BookForm = ({
             fullWidth
             label="URL da imagem de capa"
             type="url"
-            value={values.urlImagemCapa}
-            onChange={(event) => onChange('urlImagemCapa', event.target.value)}
+            {...createFieldProps('urlImagemCapa', controlled, values, onChange, onFieldChange)}
           />
         </Grid>
 
@@ -103,8 +111,7 @@ export const BookForm = ({
             multiline
             minRows={4}
             label="Descrição"
-            value={values.descricao}
-            onChange={(event) => onChange('descricao', event.target.value)}
+            {...createFieldProps('descricao', controlled, values, onChange, onFieldChange)}
           />
         </Grid>
       </Grid>
@@ -144,7 +151,9 @@ BookForm.propTypes = {
   }).isRequired,
   errors: PropTypes.objectOf(PropTypes.string).isRequired,
   submitLabel: PropTypes.string.isRequired,
+  controlled: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
+  onFieldChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,

@@ -70,18 +70,21 @@ export const BookManagementPage = () => {
 
   const handleSave = async (event) => {
     event.preventDefault()
+    const formValues = bookForm.isEditing
+      ? bookForm.values
+      : Object.fromEntries(new FormData(event.currentTarget).entries())
 
-    if (!bookForm.validate()) {
+    if (!bookForm.validate(formValues)) {
       return
     }
 
     try {
       if (bookForm.isEditing) {
-        await editBook(bookForm.editingBookId, bookForm.values)
-        setMessage(`“${bookForm.values.titulo.trim()}” foi atualizado com sucesso.`)
+        await editBook(bookForm.editingBookId, formValues)
+        setMessage(`“${formValues.titulo.trim()}” foi atualizado com sucesso.`)
       } else {
-        await addBook(bookForm.values)
-        setMessage(`“${bookForm.values.titulo.trim()}” foi cadastrado com sucesso.`)
+        await addBook(formValues)
+        setMessage(`“${formValues.titulo.trim()}” foi cadastrado com sucesso.`)
       }
 
       bookForm.close()
@@ -109,7 +112,7 @@ export const BookManagementPage = () => {
       >
         <Box>
           <Typography variant="overline" color="primary" sx={{ fontWeight: 700 }}>
-            Feature II — Parte 3
+            Feature II — Parte 4
           </Typography>
           <Typography
             component="h1"
@@ -119,7 +122,7 @@ export const BookManagementPage = () => {
             CRUD de livros
           </Typography>
           <Typography color="text.secondary" sx={{ mt: 1, fontSize: '1.05rem' }}>
-            Livros carregados e atualizados diretamente pela API.
+            Cadastro não controlado e edição controlada.
           </Typography>
         </Box>
 
@@ -227,10 +230,13 @@ export const BookManagementPage = () => {
         <DialogTitle>{bookForm.isEditing ? 'Editar livro' : 'Cadastrar livro'}</DialogTitle>
         <DialogContent dividers>
           <BookForm
+            key={bookForm.isEditing ? `edit-${bookForm.editingBookId}` : 'create'}
             values={bookForm.values}
             errors={bookForm.errors}
             submitLabel={bookForm.isEditing ? 'Salvar alterações' : 'Cadastrar livro'}
+            controlled={bookForm.isEditing}
             onChange={bookForm.changeField}
+            onFieldChange={bookForm.clearFieldError}
             onSubmit={handleSave}
             onCancel={bookForm.close}
             loading={isSaving}

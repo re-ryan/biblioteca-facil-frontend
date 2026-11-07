@@ -75,9 +75,13 @@ export const useBookForm = () => {
     setIsOpen(true)
   }
 
+  const clearFieldError = (field) => {
+    setErrors((currentErrors) => ({ ...currentErrors, [field]: '', isbn: '' }))
+  }
+
   const changeField = (field, value) => {
     setValues((currentValues) => ({ ...currentValues, [field]: value }))
-    setErrors((currentErrors) => ({ ...currentErrors, [field]: '', isbn: '' }))
+    clearFieldError(field)
   }
 
   const close = () => {
@@ -85,8 +89,8 @@ export const useBookForm = () => {
     setErrors({})
   }
 
-  const validate = () => {
-    const nextErrors = validateBook(values)
+  const validate = (formValues = values) => {
+    const nextErrors = validateBook(formValues)
     setErrors(nextErrors)
     return Object.keys(nextErrors).length === 0
   }
@@ -100,6 +104,7 @@ export const useBookForm = () => {
     openCreate,
     openEdit,
     changeField,
+    clearFieldError,
     close,
     validate,
   }
