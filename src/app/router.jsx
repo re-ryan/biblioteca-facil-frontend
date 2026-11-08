@@ -2,6 +2,8 @@ import { createElement, lazy, Suspense } from 'react'
 import { CircularProgress, Stack } from '@mui/material'
 import { createBrowserRouter } from 'react-router-dom'
 import { AppLayout } from '../components/layout/AppLayout'
+import { ProtectedRoute } from '../features/auth/components/ProtectedRoute'
+import { BooksProvider } from '../features/books/context/BooksProvider'
 
 const pages = {
   home: lazy(() =>
@@ -46,7 +48,11 @@ export const router = createBrowserRouter(
         },
         {
           path: 'livros',
-          element: withLoading(createElement(pages.bookManagement)),
+          element: (
+            <ProtectedRoute>
+              <BooksProvider>{withLoading(createElement(pages.bookManagement))}</BooksProvider>
+            </ProtectedRoute>
+          ),
         },
         {
           path: '*',

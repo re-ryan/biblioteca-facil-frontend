@@ -113,17 +113,17 @@ export const BookManagementPage = () => {
       >
         <Box>
           <Typography variant="overline" color="primary" sx={{ fontWeight: 700 }}>
-            Feature III — Parte 1
+            Biblioteca Linux
           </Typography>
           <Typography
             component="h1"
             variant="h2"
             sx={{ mt: 0.5, fontSize: { xs: '2.5rem', md: '3.5rem' } }}
           >
-            CRUD de livros
+            Gerenciamento de livros
           </Typography>
           <Typography color="text.secondary" sx={{ mt: 1, fontSize: '1.05rem' }}>
-            CRUD integrado e consulta externa de metadados por ISBN.
+            Cadastre, atualize, consulte e organize os livros do acervo.
           </Typography>
         </Box>
 

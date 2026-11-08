@@ -51,13 +51,13 @@ export const IsbnLookupCard = () => {
         <Stack spacing={3}>
           <Box>
             <Typography color="secondary.dark" variant="overline" sx={{ fontWeight: 800 }}>
-              API EXTERNA
+              CONSULTA BIBLIOGRÁFICA
             </Typography>
             <Typography component="h2" variant="h4" sx={{ mt: 0.5 }}>
-              Consultar metadados por ISBN
+              Buscar dados de um livro pelo ISBN
             </Typography>
             <Typography color="text.secondary" sx={{ mt: 1 }}>
-              Consulte título, editora e demais informações bibliográficas fornecidas pela BrasilAPI.
+              Informe o ISBN para localizar o título, a editora e outras informações do livro.
             </Typography>
           </Box>
 
@@ -70,7 +70,7 @@ export const IsbnLookupCard = () => {
           >
             <TextField
               fullWidth
-              label="ISBN-13 para consulta externa"
+              label="ISBN-13"
               value={isbnInput}
               onChange={handleChange}
               error={Boolean(validationError)}

@@ -37,7 +37,7 @@ const renderLookup = (queryClient = createQueryClient()) =>
   )
 
 const submitIsbn = async (user, isbn = '9788535902778') => {
-  await user.type(screen.getByLabelText(/isbn-13 para consulta externa/i), isbn)
+  await user.type(screen.getByLabelText(/^isbn-13$/i), isbn)
   await user.click(screen.getByRole('button', { name: /consultar isbn/i }))
 }
 

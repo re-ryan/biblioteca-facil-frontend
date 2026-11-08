@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded'
-import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded'
 import AutoStoriesRoundedIcon from '@mui/icons-material/AutoStoriesRounded'
 import LockRoundedIcon from '@mui/icons-material/LockRounded'
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
@@ -11,10 +10,7 @@ import {
   Button,
   Card,
   CardContent,
-  Checkbox,
   Container,
-  Divider,
-  FormControlLabel,
   Grid,
   IconButton,
   InputAdornment,
@@ -22,7 +18,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { Link as RouterLink } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { DEMO_CREDENTIALS } from '../features/auth/authentication'
+import { useAuth } from '../features/auth/context/useAuth'
 
 const initialCredentials = {
   login: '',
@@ -32,10 +30,13 @@ const initialCredentials = {
 export const LoginPage = () => {
   const [credentials, setCredentials] = useState(initialCredentials)
   const [passwordVisible, setPasswordVisible] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const { isAuthenticated, login } = useAuth()
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const handleChange = ({ target: { name, value } }) => {
-    setSubmitted(false)
+    setErrorMessage('')
     setCredentials((currentCredentials) => ({
       ...currentCredentials,
       [name]: value,
@@ -44,7 +45,20 @@ export const LoginPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    setSubmitted(true)
+
+    if (!login(credentials)) {
+      setErrorMessage('Login ou senha inválidos.')
+      return
+    }
+
+    const requestedPath = location.state?.from?.pathname
+    navigate(requestedPath && requestedPath !== '/login' ? requestedPath : '/livros', {
+      replace: true,
+    })
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/livros" replace />
   }
 
   return (
@@ -108,10 +122,14 @@ export const LoginPage = () => {
                     </Typography>
                   </Box>
 
-                  {submitted && (
-                    <Alert severity="info">
-                      Este formulário está pronto na interface. A autenticação será conectada ao
-                      backend quando o serviço de acesso estiver disponível.
+                  <Alert severity="info">
+                    Dados para acesso: login <strong>{DEMO_CREDENTIALS.login}</strong> e senha{' '}
+                    <strong>{DEMO_CREDENTIALS.password}</strong>.
+                  </Alert>
+
+                  {errorMessage && (
+                    <Alert severity="error">
+                      {errorMessage}
                     </Alert>
                   )}
 
@@ -169,26 +187,9 @@ export const LoginPage = () => {
                     }}
                   />
 
-                  <FormControlLabel control={<Checkbox />} label="Lembrar meu acesso neste dispositivo" />
-
                   <Button type="submit" variant="contained" size="large">
                     Entrar
                   </Button>
-
-                  <Divider>ou</Divider>
-
-                  <Button
-                    component={RouterLink}
-                    to="/livros"
-                    variant="outlined"
-                    size="large"
-                    startIcon={<AccountBalanceRoundedIcon />}
-                  >
-                    Acessar Biblioteca Linux
-                  </Button>
-                  <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
-                    Nesta etapa, os dados são mantidos apenas durante o uso da página.
-                  </Typography>
                 </Stack>
               </Box>
             </CardContent>
