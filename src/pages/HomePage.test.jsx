@@ -27,6 +27,7 @@ describe('HomePage', () => {
     ).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /acessar catálogo/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /conhecer área administrativa/i })).not.toBeInTheDocument()
+    expect(screen.queryByText(/reserva/i)).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: /entrar na plataforma/i })).toHaveAttribute(
       'href',
       '/login',

@@ -2,6 +2,7 @@ import { createElement, lazy, Suspense } from 'react'
 import { CircularProgress, Stack } from '@mui/material'
 import { createBrowserRouter } from 'react-router-dom'
 import { AppLayout } from '../components/layout/AppLayout'
+import { USER_ROLES } from '../features/auth/authentication'
 import { ProtectedRoute } from '../features/auth/components/ProtectedRoute'
 import { BooksProvider } from '../features/books/context/BooksProvider'
 
@@ -11,6 +12,9 @@ const pages = {
   ),
   bookManagement: lazy(() =>
     import('../pages/BookManagementPage').then(({ BookManagementPage: page }) => ({ default: page })),
+  ),
+  catalog: lazy(() =>
+    import('../pages/CatalogPage').then(({ CatalogPage: page }) => ({ default: page })),
   ),
   login: lazy(() =>
     import('../pages/LoginPage').then(({ LoginPage: page }) => ({ default: page })),
@@ -49,8 +53,16 @@ export const router = createBrowserRouter(
         {
           path: 'livros',
           element: (
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={[USER_ROLES.ADMINISTRATOR]}>
               <BooksProvider>{withLoading(createElement(pages.bookManagement))}</BooksProvider>
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: 'catalogo',
+          element: (
+            <ProtectedRoute allowedRoles={[USER_ROLES.READER]}>
+              {withLoading(createElement(pages.catalog))}
             </ProtectedRoute>
           ),
         },

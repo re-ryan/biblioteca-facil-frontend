@@ -19,7 +19,11 @@ import {
   Typography,
 } from '@mui/material'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { DEMO_CREDENTIALS } from '../features/auth/authentication'
+import {
+  DEMO_CREDENTIALS,
+  getDefaultRoute,
+  READER_DEMO_CREDENTIALS,
+} from '../features/auth/authentication'
 import { useAuth } from '../features/auth/context/useAuth'
 
 const initialCredentials = {
@@ -31,7 +35,7 @@ export const LoginPage = () => {
   const [credentials, setCredentials] = useState(initialCredentials)
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const { isAuthenticated, login } = useAuth()
+  const { isAuthenticated, login, user } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -46,19 +50,24 @@ export const LoginPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    if (!login(credentials)) {
+    const authenticatedUser = login(credentials)
+
+    if (!authenticatedUser) {
       setErrorMessage('Login ou senha inválidos.')
       return
     }
 
     const requestedPath = location.state?.from?.pathname
-    navigate(requestedPath && requestedPath !== '/login' ? requestedPath : '/livros', {
-      replace: true,
-    })
+    navigate(
+      requestedPath && requestedPath !== '/login'
+        ? requestedPath
+        : getDefaultRoute(authenticatedUser),
+      { replace: true },
+    )
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/livros" replace />
+    return <Navigate to={getDefaultRoute(user)} replace />
   }
 
   return (
@@ -86,13 +95,12 @@ export const LoginPage = () => {
                   Acesse o Biblioteca Fácil
                 </Typography>
                 <Typography sx={{ color: 'rgba(255, 255, 255, 0.76)', fontSize: '1.05rem' }}>
-                  A entrada identifica leitores e administradores e direciona cada perfil para
-                  os recursos disponíveis.
+                  Entre com sua conta para consultar o catálogo ou administrar a biblioteca.
                 </Typography>
               </Box>
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.64)' }}>
-                Leitores acessam o catálogo e suas reservas. Administradores gerenciam os dados
-                de sua biblioteca.
+                Leitores consultam o catálogo. Administradores gerenciam os dados de sua
+                biblioteca.
               </Typography>
             </Stack>
           </Box>
@@ -118,13 +126,21 @@ export const LoginPage = () => {
                       Entrar na conta
                     </Typography>
                     <Typography color="text.secondary">
-                      Informe suas credenciais de acesso para continuar.
+                      Digite seu login e sua senha para continuar.
                     </Typography>
                   </Box>
 
                   <Alert severity="info">
-                    Dados para acesso: login <strong>{DEMO_CREDENTIALS.login}</strong> e senha{' '}
-                    <strong>{DEMO_CREDENTIALS.password}</strong>.
+                    <Stack spacing={0.75}>
+                      <span>
+                        Biblioteca: login <strong>{DEMO_CREDENTIALS.login}</strong> e senha{' '}
+                        <strong>{DEMO_CREDENTIALS.password}</strong>.
+                      </span>
+                      <span>
+                        Leitor: login <strong>{READER_DEMO_CREDENTIALS.login}</strong> e senha{' '}
+                        <strong>{READER_DEMO_CREDENTIALS.password}</strong>.
+                      </span>
+                    </Stack>
                   </Alert>
 
                   {errorMessage && (

@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { DEMO_CREDENTIALS } from '../authentication'
+import { DEMO_CREDENTIALS, READER_DEMO_CREDENTIALS } from '../authentication'
 import { AuthProvider } from './AuthProvider'
 import { useAuth } from './useAuth'
 
@@ -11,12 +11,12 @@ describe('AuthContext', () => {
     expect(result.current.isAuthenticated).toBe(false)
     expect(result.current.user).toBeNull()
 
-    let authenticated = false
+    let authenticatedUser = null
     act(() => {
-      authenticated = result.current.login(DEMO_CREDENTIALS)
+      authenticatedUser = result.current.login(DEMO_CREDENTIALS)
     })
 
-    expect(authenticated).toBe(true)
+    expect(authenticatedUser).toMatchObject({ role: 'ADMINISTRADOR' })
     expect(result.current.isAuthenticated).toBe(true)
     expect(result.current.user).toMatchObject({
       login: DEMO_CREDENTIALS.login,
@@ -32,15 +32,26 @@ describe('AuthContext', () => {
   it('rejeita credenciais inválidas', () => {
     const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider })
 
-    let authenticated = true
+    let authenticatedUser = { role: 'INVALIDO' }
     act(() => {
-      authenticated = result.current.login({
+      authenticatedUser = result.current.login({
         login: DEMO_CREDENTIALS.login,
         password: 'senha-incorreta',
       })
     })
 
-    expect(authenticated).toBe(false)
+    expect(authenticatedUser).toBeNull()
     expect(result.current.isAuthenticated).toBe(false)
+  })
+
+  it('identifica o perfil do leitor', () => {
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider })
+
+    act(() => result.current.login(READER_DEMO_CREDENTIALS))
+
+    expect(result.current.user).toMatchObject({
+      login: READER_DEMO_CREDENTIALS.login,
+      role: 'LEITOR',
+    })
   })
 })

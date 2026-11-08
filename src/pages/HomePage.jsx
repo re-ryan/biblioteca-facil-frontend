@@ -25,49 +25,44 @@ const modules = [
   {
     icon: <MenuBookRoundedIcon fontSize="large" />,
     audience: 'Módulo Leitor',
-    description:
-      'Encontra livros nas bibliotecas cadastradas, consulta os detalhes do acervo e solicita reservas.',
-    features: ['Pesquisar livros', 'Consultar disponibilidade', 'Solicitar reservas'],
+    description: 'Pesquise livros e veja em quais bibliotecas eles estão disponíveis.',
+    features: ['Pesquisar livros', 'Consultar bibliotecas', 'Ver o estoque disponível'],
   },
   {
     icon: <AccountBalanceRoundedIcon fontSize="large" />,
     audience: 'Módulo Biblioteca',
-    description:
-      'Gerencia as informações da sua biblioteca, mantém o acervo atualizado e acompanha as solicitações dos leitores.',
-    features: ['Gerenciar a biblioteca', 'Cadastrar e atualizar o acervo', 'Acompanhar solicitações'],
+    description: 'Cadastre livros e mantenha o acervo da sua biblioteca atualizado.',
+    features: ['Gerenciar a biblioteca', 'Cadastrar livros', 'Atualizar o acervo'],
   },
 ]
 
 const steps = [
   {
     title: 'Entre na plataforma',
-    description: 'Leitores e responsáveis pela biblioteca utilizam a mesma página de acesso.',
+    description: 'Leitores e responsáveis pela biblioteca usam a mesma página de login.',
   },
   {
-    title: 'Acesse seu módulo',
-    description: 'O perfil direciona cada usuário para o módulo adequado às suas atividades.',
+    title: 'Acesse sua área',
+    description: 'Depois do login, você vai direto para a área do seu usuário.',
   },
   {
-    title: 'Utilize os recursos',
-    description: 'Consulte e reserve livros ou gerencie a biblioteca, o acervo e as solicitações.',
+    title: 'Use o site',
+    description: 'O leitor pesquisa livros. O administrador cadastra e atualiza o acervo.',
   },
 ]
 
 const questions = [
   {
     question: 'Preciso de uma conta para consultar o catálogo?',
-    answer:
-      'Sim. O catálogo e os demais recursos do Módulo Leitor ficam disponíveis depois da identificação do usuário.',
+    answer: 'Sim. Faça login como leitor para pesquisar os livros do catálogo.',
   },
   {
-    question: 'Como funciona a reserva de um livro?',
-    answer:
-      'O leitor consulta a disponibilidade do livro e envia uma solicitação para a biblioteca responsável pelo exemplar.',
+    question: 'Quais informações aparecem no catálogo?',
+    answer: 'O catálogo mostra o livro, os autores, as categorias, as bibliotecas e o estoque.',
   },
   {
     question: 'Quem pode administrar uma biblioteca?',
-    answer:
-      'Usuários vinculados ao Módulo Biblioteca podem manter os dados da instituição, atualizar o acervo e acompanhar solicitações.',
+    answer: 'O administrador pode cadastrar livros e atualizar o acervo da sua biblioteca.',
   },
 ]
 
@@ -103,9 +98,8 @@ export const HomePage = () => (
                 color="text.secondary"
                 sx={{ maxWidth: 680, fontWeight: 400 }}
               >
-                O Biblioteca Fácil conecta leitores e bibliotecas: quem procura um livro
-                consulta o catálogo e solicita reservas, enquanto cada administrador mantém
-                sua biblioteca organizada.
+                O leitor pesquisa um livro e vê em quais bibliotecas ele está disponível. O
+                administrador cadastra os livros e mantém o acervo atualizado.
               </Typography>
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
@@ -169,8 +163,7 @@ export const HomePage = () => (
           PERFIS DE USO
         </Typography>
         <Typography color="text.secondary" sx={{ fontSize: '1.05rem' }}>
-          Cada perfil acessa as ferramentas necessárias para consultar ou administrar uma
-          biblioteca, sem misturar responsabilidades.
+          O leitor consulta os livros. O administrador cuida da biblioteca e do acervo.
         </Typography>
       </Stack>
 
@@ -230,7 +223,7 @@ export const HomePage = () => (
             Como funciona o acesso
           </Typography>
           <Typography color="text.secondary" sx={{ fontSize: '1.05rem' }}>
-            A identificação do usuário organiza o acesso aos recursos de cada módulo.
+            Depois do login, cada usuário acessa sua área.
           </Typography>
         </Stack>
 
@@ -278,7 +271,7 @@ export const HomePage = () => (
               Dúvidas sobre o acesso
             </Typography>
             <Typography color="text.secondary">
-              Informações rápidas para entender como utilizar o Biblioteca Fácil.
+              Veja as principais dúvidas sobre o site.
             </Typography>
           </Stack>
         </Grid>

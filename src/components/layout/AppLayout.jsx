@@ -19,6 +19,7 @@ import {
   Typography,
 } from '@mui/material'
 import { Link as RouterLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { USER_ROLES } from '../../features/auth/authentication'
 import { useAuth } from '../../features/auth/context/useAuth'
 
 const publicNavigation = [{ label: 'Início', path: '/' }]
@@ -27,10 +28,11 @@ export const AppLayout = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
-  const { isAuthenticated, logout } = useAuth()
-  const navigation = isAuthenticated
-    ? [...publicNavigation, { label: 'Livros', path: '/livros' }]
-    : publicNavigation
+  const { isAuthenticated, logout, user } = useAuth()
+  const privateNavigation = user?.role === USER_ROLES.READER
+    ? [{ label: 'Catálogo', path: '/catalogo' }]
+    : [{ label: 'Livros', path: '/livros' }]
+  const navigation = isAuthenticated ? [...publicNavigation, ...privateNavigation] : publicNavigation
 
   const isCurrentPath = (path) =>
     path === '/' ? location.pathname === path : location.pathname.startsWith(path)

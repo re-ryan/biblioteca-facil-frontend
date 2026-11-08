@@ -1,18 +1,20 @@
 import { useCallback, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
-import { authenticate, DEMO_USER } from '../authentication'
+import { authenticate } from '../authentication'
 import { AuthContext } from './AuthContext'
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
 
   const login = useCallback((credentials) => {
-    if (!authenticate(credentials)) {
-      return false
+    const authenticatedUser = authenticate(credentials)
+
+    if (!authenticatedUser) {
+      return null
     }
 
-    setUser(DEMO_USER)
-    return true
+    setUser(authenticatedUser)
+    return authenticatedUser
   }, [])
 
   const logout = useCallback(() => setUser(null), [])
